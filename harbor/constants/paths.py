@@ -1,0 +1,3 @@
+paths = {
+    'CONFIG_FILE': '',
+}
