@@ -1,6 +1,6 @@
 ''' All CLI hooks are handled through here. '''
 
-from harbor.services import registration_service
+from lib.services import registration_service
 
 import click
 
@@ -16,6 +16,7 @@ def register():
     registration_service.delegate()
 
 
+@click.command()
 def deploy():
     ''' Deploy your project once it's registered. '''
     pass
@@ -23,4 +24,3 @@ def deploy():
 
 cli.add_command(register)
 cli.add_command(deploy)
-

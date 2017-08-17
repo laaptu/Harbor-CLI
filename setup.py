@@ -9,10 +9,9 @@ setup(
         'Click',
         'PyYaml'
     ],
-    entry_points='''
-        [console_scripts]
-        harbor=harbor-cli.cli_hooks:cli
-    ''',
+    entry_points={
+        'console_scripts': ['harbor=lib.cli_hooks:cli']
+    },
     url='',
     author='Srishan Bhattarai',
     author_email='srishanbhattarai@gmail.com',
