@@ -19,7 +19,7 @@ def register():
 @click.command()
 def deploy():
     ''' Deploy your project once it's registered. '''
-    pass
+    deploy_service.delegate()
 
 
 cli.add_command(register)
