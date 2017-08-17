@@ -14,3 +14,17 @@ def requires_presence_of_file(file_path):
             return f(*args, **kwargs)
         return with_args
     return wrapper
+
+
+def with_additional_kwargs(**additional_kwargs):
+    '''
+    Injects additional kwargs into the kwargs of the original func.
+    Useful for injecting credentials/sensitive information into the function.
+    '''
+    def wrapper(f):
+        @wraps(f)
+        def inner(*args, **kwargs):
+            kwargs.update(additional_kwargs)
+            return f(*args, **kwargs)
+        return inner
+    return wrapper
