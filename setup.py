@@ -11,7 +11,7 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        harbor=harbor.cli_hooks:cli
+        harbor=harbor-cli.cli_hooks:cli
     ''',
     url='',
     author='Srishan Bhattarai',
