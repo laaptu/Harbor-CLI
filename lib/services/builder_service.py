@@ -3,6 +3,7 @@ import sys
 from lib.constants.build_platforms import build_platforms
 from lib.services.build_strategies import build_strategies
 from lib.exceptions.DirNotFound import DirNotFoundException
+from lib.exceptions.FileNotFound import FileNotFoundException
 
 def builder(build_platform=build_platforms['REACT_NATIVE']):
     class Builder():
@@ -16,5 +17,8 @@ def builder(build_platform=build_platforms['REACT_NATIVE']):
             except DirNotFoundException as e:
                 print(e.message)
                 sys.exit(1)
+            except FileNotFoundException as e:
+                print(e.message)
+                sys.exit(0)
 
     return Builder

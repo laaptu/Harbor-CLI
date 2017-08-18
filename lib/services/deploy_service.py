@@ -9,7 +9,7 @@ class DeployService():
         self.auth_service = auth_service_instance
 
     def delegate(self):
-        self.login_with_email()
+        # self.login_with_email()
         self.builder.build()
 
     def login_with_email(self):
