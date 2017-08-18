@@ -16,7 +16,7 @@ class DeployService():
         email, password = get_login_credentials()
         try:
             self.auth_service.login_with_email(email, password)
-            print('\nLogged in successfully. ')
+            print('\nLogged in successfully.\n')
         except Exception as e:
-            print('\nAn error occurred. Please check your connection, credentials and try again.')
+            print('\nAn error occurred. Please check your connection, credentials and try again.\n')
             sys.exit(1)
