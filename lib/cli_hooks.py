@@ -1,6 +1,8 @@
 ''' All CLI hooks are handled through here. '''
 
 from lib.services import deploy_service, registration_service
+from lib.services.firebase_service import Firebase
+from lib.services.builder_service import builder
 
 import click
 
@@ -19,7 +21,9 @@ def register():
 @click.command()
 def deploy():
     ''' Deploy your project once it's registered. '''
-    deploy_service.delegate()
+    deploy_service.DeployService(
+        Firebase(), builder()()
+    ).delegate()
 
 
 cli.add_command(register)
