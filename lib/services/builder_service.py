@@ -8,6 +8,6 @@ def builder(build_platform=build_platforms['REACT_NATIVE']):
             self.build_platform = build_platform
 
         def build(self):
-            build_strategies()[self.build_platform]()
+            build_strategies[self.build_platform]()
 
     return Builder
