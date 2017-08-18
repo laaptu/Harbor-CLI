@@ -1,6 +1,6 @@
 ''' All CLI hooks are handled through here. '''
 
-from lib.services import registration_service
+from lib.services import deploy_service, registration_service
 
 import click
 
