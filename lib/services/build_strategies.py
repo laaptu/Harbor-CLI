@@ -12,7 +12,13 @@ def build_strategies():
     }
 
 
-@requires_presence_of_file(paths['REACT_NATIVE_PACKAGE_JSON'])
-@requires_presence_of_dir(paths['REACT_NATIVE_ANDROID_DIR'])
+@requires_presence_of_file(
+    paths['REACT_NATIVE_PACKAGE_JSON'],
+    lambda path: 'Cannot find {0}. Please make sure you are in the root of a valid React Native Project.'.format(path)
+)
+@requires_presence_of_dir(
+    paths['REACT_NATIVE_ANDROID_DIR'],
+    lambda path: 'Cannot find the Android directory ({0}). Please make sure you are in the root of a valid React Native Project.'.format(path)
+)
 def strategy_react_native():
     print('Will build react native apk.')
