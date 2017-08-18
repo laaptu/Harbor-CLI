@@ -1,3 +1,4 @@
+from lib.utils import gradle
 from lib.constants.paths import paths
 from lib.constants.build_platforms import build_platforms
 from lib.utils.decorators import requires_presence_of_dir, requires_presence_of_file
@@ -21,4 +22,8 @@ def build_strategies():
     lambda path: 'Cannot find the Android directory ({0}). Please make sure you are in the root of a valid React Native Project.'.format(path)
 )
 def strategy_react_native():
-    print('Will build react native apk.')
+  print('Building the project. Please be patient... ')
+  returncode = gradle.build_react_native()
+
+  print('Return code: %s' % returncode)
+
