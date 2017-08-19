@@ -8,8 +8,8 @@ def build_react_native():
         for line in process.stderr:
             print(line)
 
-    apk_signed_path = './android/app/build/outputs/apk/app-release.apk'
-    apk_unsigned_path = './android/app/build/outputs/apk/app-release_unsigned.apk'
+    apk_signed_path = os.getcwd() + '/android/app/build/outputs/apk/app-release.apk'
+    apk_unsigned_path = os.getcwd() + '/android/app/build/outputs/apk/app-release-unsigned.apk'
 
     build_type = None
     apk_path = None
