@@ -24,12 +24,14 @@ class DeployService():
         print('\nUpload successful. APK was deployed.')
 
     def __get_output_path__(self, build_details):
+        ''' Compose the output path of files to be stored in the server. '''
         name = build_details['metainf']['name']
         timestamp = time.time()
 
         return name + '/' + name + '_' + str(int(timestamp)) + '.apk'
 
     def login_with_email(self):
+        ''' Login a user with email via auth service. '''
         email, password = get_login_credentials()
         try:
             self.auth.login_with_email(email, password)
