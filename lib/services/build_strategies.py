@@ -1,3 +1,5 @@
+import sys
+
 from lib.utils import gradle
 from lib.constants.paths import paths
 from lib.utils.json_parser import json_parse
@@ -41,6 +43,8 @@ def strategy_react_native():
 
   elif build_details['returncode'] == -1:
       print('Something went wrong. Please check the error messages and try again.')
+      sys.exit(1)
 
-  elif btuild_details['returncode'] == -13:
-      priurnt('Something went wrong. This generally happens when Java is not properly configured.')
+  elif build_details['returncode'] == -13:
+      print('Something went wrong. This generally happens when Java is not properly configured.')
+      sys.exit(1)
