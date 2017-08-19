@@ -13,11 +13,12 @@ def cli():
 
 
 @click.command()
-def register():
+@click.option('-u', is_flag=True)
+def register(u):
     ''' Register your project on the server. '''
     registration_service.RegistrationService(
         Firebase()
-    ).delegate()
+    ).delegate(True if u else False)
 
 
 @click.command()

@@ -9,9 +9,10 @@ class RegistrationService():
     ):
         self.auth = auth_service_instance
 
-    def delegate(self):
+    def delegate(self, is_user_registration=False):
         ''' Delegate for the CLI. The only public method. '''
-        self.__create_user_with_email__()
+        if is_user_registration:
+            self.__create_user_with_email__()
 
 
     def __create_user_with_email__(self):
