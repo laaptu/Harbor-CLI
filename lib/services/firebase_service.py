@@ -5,7 +5,7 @@ from lib.utils.singleton import Singleton
 
 class Firebase(metaclass=Singleton):
     '''
-        Handle firebase comm. with this class. Make this a singleton using a metaclass.
+    Handle firebase comm. with this class. Make this a singleton using a metaclass.
     '''
 
     def __init__(self, config=firebase_config):
@@ -22,5 +22,5 @@ class Firebase(metaclass=Singleton):
     def __refresh_token__(self):
         self.user = self.auth.refresh(self.user['refreshToken'])
 
-    def get_db_handler(self):
-        return self.db
+    def upload(self, output_path, input_path):
+        self.storage.child(output_path).put(input_path, self.user['idToken'])
