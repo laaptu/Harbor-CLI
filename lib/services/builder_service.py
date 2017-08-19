@@ -1,11 +1,11 @@
 import sys
 
-from lib.constants.build_platforms import build_platforms
+from lib.constants.build_platforms import BuildPlatforms
 from lib.services.build_strategies import build_strategies
 from lib.exceptions.DirNotFound import DirNotFoundException
 from lib.exceptions.FileNotFound import FileNotFoundException
 
-def builder(build_platform=build_platforms['REACT_NATIVE']):
+def builder(build_platform=BuildPlatforms.REACT_NATIVE):
     class Builder():
 
         def __init__(self):
