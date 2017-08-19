@@ -15,7 +15,9 @@ def cli():
 @click.command()
 def register():
     ''' Register your project on the server. '''
-    registration_service.delegate()
+    registration_service.RegistrationService(
+        Firebase()
+    ).delegate()
 
 
 @click.command()

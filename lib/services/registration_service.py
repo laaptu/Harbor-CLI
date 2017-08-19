@@ -1,3 +1,4 @@
+import sys
 from lib.services.stdio_service import get_login_credentials
 
 class RegistrationService():
@@ -20,5 +21,11 @@ class RegistrationService():
             self.auth.signup_via_email(email, password)
             print('\nSigned up successfully.\n')
         except Exception as e:
-            print('\nAn error occurred. Please check your connection, credentials and try again.\n')
+            # TODO: Workaround the hacky eval usage here. Need to get 'message' from request.exception class instance.
+            error = eval(e.args[1])
+
+            if error['error']['message'] == 'EMAIL_EXISTS':
+                print('\nEmail already registered.')
+            else:
+                print('\nAn error occurred. Please check your connection, credentials and try again.\n')
             sys.exit(1)

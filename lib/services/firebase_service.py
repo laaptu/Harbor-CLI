@@ -9,6 +9,7 @@ class Firebase(metaclass=Singleton):
     '''
 
     def __init__(self, config=firebase_config):
+        ''' Initialize auth, db, storage handles. '''
         self.config = config
         self.firebase = pyrebase.initialize_app(self.config)
         self.auth = self.firebase.auth()
@@ -17,10 +18,17 @@ class Firebase(metaclass=Singleton):
         self.user = None
 
     def login_with_email(self, email, password):
+        ''' Login via email. '''
         self.user = self.auth.sign_in_with_email_and_password(email, password)
 
     def __refresh_token__(self):
+        ''' Refresh user token '''
         self.user = self.auth.refresh(self.user['refreshToken'])
 
     def upload(self, output_path, input_path):
+        ''' Upload file to a output path. '''
         self.storage.child(output_path).put(input_path, self.user['idToken'])
+
+    def signup_via_email(self, email, password):
+        ''' Create an account. '''
+        self.auth.create_user_with_email_and_password(email, password)
