@@ -7,7 +7,8 @@ setup(
     py_modules=['main'],
     install_requires=[
         'Click',
-        'PyYaml'
+        'PyYaml',
+        'pyrebase'
     ],
     entry_points={
         'console_scripts': ['harbor=lib.cli_hooks:cli']
