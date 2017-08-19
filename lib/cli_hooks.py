@@ -22,7 +22,9 @@ def register():
 def deploy():
     ''' Deploy your project once it's registered. '''
     deploy_service.DeployService(
-        Firebase(), builder()()
+        Firebase(),
+        Firebase(),
+        builder()()
     ).delegate()
 
 
