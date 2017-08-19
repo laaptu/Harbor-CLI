@@ -12,4 +12,3 @@ def get_login_credentials():
     password = getpass.getpass()
 
     return (email, password)
-
