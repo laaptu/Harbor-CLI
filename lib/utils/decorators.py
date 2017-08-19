@@ -4,7 +4,7 @@ from functools import wraps
 from lib.exceptions.FileNotFound import FileNotFoundException
 from lib.exceptions.DirNotFound import DirNotFoundException
 
-def requires_presence_of_file(file_path, on_failure=None):
+def requires_presence_of_file(file_path, on_failure=lambda *args: None):
     ''' Decorator to verify if a file exists before doing anything else. '''
     def wrapper(f):
         @wraps(f)
