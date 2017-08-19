@@ -16,8 +16,8 @@ class DeployService():
         self.auth = auth_service_instance
 
     def delegate(self):
-        self.login_with_email()
         build_details = self.builder.build()
+        self.login_with_email()
         print('\nUploading %s...' % (build_details['apk_path']))
         self.storage.upload(self.__get_output_path__(build_details), build_details['apk_path'])
 
