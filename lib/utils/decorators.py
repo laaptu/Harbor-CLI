@@ -17,7 +17,7 @@ def requires_presence_of_file(file_path, on_failure=lambda *args: None):
     return wrapper
 
 
-def requires_presence_of_dir(dir_path, on_failure=None):
+def requires_presence_of_dir(dir_path, on_failure=lambda *args: None):
     ''' Decorator to verify if a file exists before doing anything else. '''
     def wrapper(f):
         @wraps(f)
