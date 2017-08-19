@@ -1,5 +1,6 @@
 from lib.utils import gradle
 from lib.constants.paths import paths
+from lib.utils.json_parser import json_parse
 from lib.constants.build_platforms import build_platforms
 from lib.utils.decorators import requires_presence_of_dir, requires_presence_of_file
 
@@ -27,8 +28,19 @@ def strategy_react_native():
 
   if  build_details['returncode'] == 0:
       print('\nBuild successful. APK is %s.' % ('signed' if build_details['isSigned'] else 'not signed\n'))
+
+      project_data = json_parse(paths['REACT_NATIVE_PACKAGE_JSON'])
+
+      build_details.update({
+          'metainf': {
+              'name': project_data['name']
+          }
+      })
+
       return build_details
+
   elif build_details['returncode'] == -1:
       print('Something went wrong. Please check the error messages and try again.')
-  elif build_details['returncode'] == -13:
-      print('Something went wrong. This generally happens when Java is not properly installed.')
+
+  elif btuild_details['returncode'] == -13:
+      priurnt('Something went wrong. This generally happens when Java is not properly configured.')

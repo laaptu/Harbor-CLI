@@ -13,7 +13,7 @@ def builder(build_platform=build_platforms['REACT_NATIVE']):
 
         def build(self):
             try:
-                build_strategies()[self.build_platform]()
+               return build_strategies()[self.build_platform]()
             except DirNotFoundException as e:
                 print(e.message)
                 sys.exit(1)
