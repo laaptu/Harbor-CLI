@@ -71,12 +71,12 @@ def test_requires_presence_of_dir():
     assert without_decorator_value(1) == 1
 
     # Verify that an error is raised when the decorator is applied and file is not present.
-    with_decorator = requires_presence_of_dir(os.getcwd() + 'test_dir')(mock_func)
+    with_decorator = requires_presence_of_dir(os.getcwd() + '/test_dir')(mock_func)
     with pytest.raises(DirNotFoundException):
         with_decorator(1)
 
     # Verify that no error is raised when decorator is applied and file is present.
-    os.makedirs(os.getcwd() + 'test_dir')
+    os.makedirs(os.getcwd() + '/test_dir')
     with_correct_file_and_decorator = requires_presence_of_dir('test_dir')(mock_func)
 
     try:
@@ -84,5 +84,4 @@ def test_requires_presence_of_dir():
 
         assert with_correct_file_and_decorator_val == 1
     finally:
-        os.rmdir(os.getcwd() + 'test_dir')
-
+        os.rmdir(os.getcwd() + '/test_dir')
