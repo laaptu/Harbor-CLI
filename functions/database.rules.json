@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "users": {
+      ".indexOn": [
+        "emailAddress",
+        "name"
+      ]
+    },
+    ".read": "true",
+    ".write": "true"
+  }
+}
