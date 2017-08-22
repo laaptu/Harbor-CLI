@@ -24,7 +24,7 @@ function saveNewUserToDatabase(event) {
 
   ref.set(data);
 
-  console.log('Registeration successful', user, email);
+  console.log('Registeration successful', uid, email);
 }
 
 exports.registerEveryNewUserInDatabase = functions.auth.user().onCreate(saveNewUserToDatabase);
