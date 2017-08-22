@@ -1,8 +1,14 @@
 import os
-
+import xml.etree.ElementTree as ET
 from subprocess import Popen, PIPE
 
+from lib.constants.paths import paths
+
 def build_react_native():
+    '''
+    Builds a React Native project using gradle cli.
+    Availability of the command is assumed.
+    '''
     with Popen( ['./android/gradlew', '-p', 'android', 'assembleRelease'], bufsize=-1, stdout=PIPE, stderr=PIPE,
                universal_newlines=True) as process:
         for line in process.stderr:
@@ -25,3 +31,11 @@ def build_react_native():
         'isSigned': True if build_type == 'signed' else False,
         'apk_path': apk_path
     }
+
+
+def get_react_native_project_name():
+    ''' Returns the project name by extracting it from the AndroidManifest.xml file.'''
+    android_manifest_tree = ET.parse(paths['REACT_NATIVE_MANIFEST'])
+    manifest_element = android_manifest_tree.getroot()
+
+    return manifest_element.attrib['package']

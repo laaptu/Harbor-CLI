@@ -3,7 +3,7 @@ import sys
 from lib.utils import gradle
 from lib.constants.paths import paths
 from lib.utils.json_parser import json_parse
-from lib.constants.build_platforms import build_platforms
+from lib.constants.build_platforms import BuildPlatforms
 from lib.utils.decorators import requires_presence_of_dir, requires_presence_of_file
 
 '''
@@ -12,7 +12,7 @@ Only RN for now.
 '''
 def build_strategies():
     return {
-        build_platforms['REACT_NATIVE']: strategy_react_native
+        BuildPlatforms.REACT_NATIVE: strategy_react_native
     }
 
 
