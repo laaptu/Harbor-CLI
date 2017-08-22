@@ -12,3 +12,5 @@ dist/
 *.pyc
 
 firebase_config.py
+
+functions/node_modules
