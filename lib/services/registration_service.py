@@ -23,18 +23,20 @@ class RegistrationService():
         self.__register_project__()
 
 
-    def __register_project__(pass):
+    def __register_project__(self):
         ''' Register a project on the server. '''
         proj_name = get_react_native_project_name()
         data = {
             'name': proj_name
         }
 
+        print('Registering project: ', proj_name)
+
         self.storage.register_project(self.__compose_project_output_path__(proj_name), data)
 
 
     def __compose_project_output_path__(self, proj_name):
-        return proj_name
+        return ''.join(proj_name.split('.'))
 
 
     def __create_user_with_email__(self):
