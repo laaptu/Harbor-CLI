@@ -1,4 +1,6 @@
 import json
+import os
+
 from lib.utils.json_parser import json_parse
 
 def test_json_parser():
@@ -8,4 +10,4 @@ def test_json_parser():
     data = json_parse('package.json')
 
     assert data['name'] == 'Harbor'
-
+    os.remove('package.json')
