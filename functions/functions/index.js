@@ -13,6 +13,7 @@ function saveNewUserToDatabase(event) {
   const email = user.email;
   const uid = user.uid;
 
+  // Cannot use  email id as a key
   const ref = db.ref('users/' + uid);
 
   console.log('Registering: user, email: ', uid, email);
