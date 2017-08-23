@@ -32,6 +32,8 @@ class Firebase(metaclass=Singleton):
         ''' Upload file to a output path. '''
         self.storage.child(output_path).put(input_path, self.user['idToken'])
 
+        return self.storage.child(output_path).get_url()
+
 
     def signup_via_email(self, email, password):
         ''' Create an account. '''
@@ -52,3 +54,8 @@ class Firebase(metaclass=Singleton):
         self.db.child('members').child(output_path).set({
             user_details['uid']: True
         })
+
+
+    def upload_project(self, output_path, data):
+        ''' Upload a project. '''
+        pass
