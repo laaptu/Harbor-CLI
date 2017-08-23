@@ -33,7 +33,7 @@ def deploy(type):
         type = ReleaseTypes.DEV.value
 
     if type.lower() not in [release_type.value.lower() for release_type in ReleaseTypes]:
-        print('{0} is not a valid release type. Please use "uat", "qa" or "dev".'.format(type))
+        print('"{0}" is not a valid release type. Please use "uat", "qa" or "dev".'.format(type))
         sys.exit(1)
 
     deploy_service.DeployService(
@@ -53,7 +53,7 @@ def invite(email, role):
         role = ReleaseTypes.DEV.value
 
     if role.lower() not in [release_type.value.lower() for release_type in ReleaseTypes]:
-        print('{0} is not a valid role. Please use "uat", "qa" or "dev".'.format(type))
+        print('"{0}" is not a valid role. Please use "uat", "qa" or "dev".'.format(role))
         sys.exit(1)
 
     if not is_valid_email(email):
