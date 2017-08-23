@@ -1,8 +1,10 @@
 ''' All CLI hooks are handled through here. '''
+import sys
 
 from lib.services import deploy_service, registration_service
 from lib.services.firebase_service import Firebase
 from lib.services.builder_service import builder
+from lib.constants.release_types import ReleaseTypes
 
 import click
 
@@ -23,9 +25,18 @@ def register(u):
 
 
 @click.command()
-def deploy():
-    ''' Deploy your project once it's registered. '''
+@click.option('--type', help='Release type [qa, uat, dev]. This affects the audience that receives notice of this release. Default value of "dev" is assumed')
+def deploy(type):
+    ''' Deploy your project once it has been registered. '''
+    if type is None:
+        type = ReleaseTypes.DEV.value
+
+    if type.lower() not in [release_type.value.lower() for release_type in ReleaseTypes]:
+        print('{0} is not a valid release type. Please use "uat", "qa" or "dev".'.format(type))
+        sys.exit(1)
+
     deploy_service.DeployService(
+        type,
         Firebase(),
         Firebase(),
         builder()()
