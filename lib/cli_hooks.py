@@ -27,10 +27,14 @@ def register(u):
 @click.command()
 @click.option('--type', help='Release type [qa, uat, dev]')
 def deploy(type):
-    if type.lower() not in [release_type.value.lower() for release_type in ReleaseTypes]:
-        print('{0} is not a valid release type'.format(type))
-        sys.exit(1)
     ''' Deploy your project once it's registered. '''
+    if type is None:
+        type = ReleaseTypes.DEV.value
+
+    if type.lower() not in [release_type.value.lower() for release_type in ReleaseTypes]:
+        print('{0} is not a valid release type. Please use "uat", "qa" or "dev".'.format(type))
+        sys.exit(1)
+
     deploy_service.DeployService(
         Firebase(),
         Firebase(),
