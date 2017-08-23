@@ -34,7 +34,8 @@ class RegistrationService():
             sys.exit(1)
 
         data = {
-            'name': proj_name
+            'name': proj_name,
+            'uploads': {}
         }
 
         print('Registering project: ', proj_name)

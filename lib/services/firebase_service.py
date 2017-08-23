@@ -32,7 +32,7 @@ class Firebase(metaclass=Singleton):
         ''' Upload file to a output path. '''
         self.storage.child(output_path).put(input_path, self.user['idToken'])
 
-        return self.storage.child(output_path).get_url()
+        return self.storage.child(output_path).get_url(self.user['idToken'])
 
 
     def signup_via_email(self, email, password):
@@ -43,13 +43,7 @@ class Firebase(metaclass=Singleton):
     def register_project(self, output_path, data):
         ''' Register a project. '''
         self.db.child('projects').child(output_path).set(data)
-
-        # Firebase doesn't suppporty dynamic key deep queries.
-        # So, we resort to client side filtering.
-        userdata =  self.db.child('users').get()
-        serializeddata = dict(userdata.val())
-        filter_user_email = lambda data: data['email'] == self.user['email']
-        user_details = list(filter(filter_user_email, [serializeddata[v] for v in serializeddata]))[0]
+        user_details = self.get_current_user_details()
 
         self.db.child('members').child(output_path).set({
             user_details['uid']: {
@@ -59,6 +53,20 @@ class Firebase(metaclass=Singleton):
         })
 
 
+    def get_current_user_details(self):
+        ''' Get current  user details provided the user is logged in. '''
+        # Firebase doesn't suppporty dynamic key deep queries.
+        # So, we resort to client side filtering.
+        userdata =  self.db.child('users').get()
+        serializeddata = dict(userdata.val())
+        filter_user_email = lambda data: data['email'] == self.user['email']
+        user_details = list(filter(filter_user_email, [serializeddata[v] for v in serializeddata]))[0]
+
+        print('Current user is: ', user_details['email'])
+
+        return user_details
+
+
     def upload_project(self, output_path, data):
         ''' Upload a project. '''
-        pass
+        self.db.child(output_path).update(data)
