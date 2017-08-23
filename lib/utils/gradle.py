@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from subprocess import Popen, PIPE
 
 from lib.constants.paths import paths
+from lib.utils.decorators import requires_presence_of_file
 
 def build_react_native():
     '''
@@ -33,6 +34,10 @@ def build_react_native():
     }
 
 
+@requires_presence_of_file(
+    paths['REACT_NATIVE_MANIFEST'],
+    lambda path: 'Could not find AndroidManifest.xml file, please make sure you  are in  the root of a valid React Native project'
+)
 def get_react_native_project_name():
     ''' Returns the project name by extracting it from the AndroidManifest.xml file.'''
     android_manifest_tree = ET.parse(paths['REACT_NATIVE_MANIFEST'])

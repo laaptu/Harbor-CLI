@@ -2,6 +2,7 @@ import sys
 
 from lib.services.stdio_service import get_login_credentials
 from lib.utils.gradle import get_react_native_project_name
+from lib.exceptions.FileNotFound import FileNotFoundException
 
 class RegistrationService():
 
@@ -26,7 +27,12 @@ class RegistrationService():
 
     def __register_project__(self):
         ''' Register a project on the server. '''
-        proj_name = get_react_native_project_name()
+        try:
+            proj_name = get_react_native_project_name()
+        except FileNotFoundException as e:
+            print(e.message)
+            sys.exit(1)
+
         data = {
             'name': proj_name
         }
