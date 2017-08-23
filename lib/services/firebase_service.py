@@ -62,8 +62,6 @@ class Firebase(metaclass=Singleton):
         filter_user_email = lambda data: data['email'] == self.user['email']
         user_details = list(filter(filter_user_email, [serializeddata[v] for v in serializeddata]))[0]
 
-        print('Current user is: ', user_details['email'])
-
         return user_details
 
 

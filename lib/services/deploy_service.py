@@ -33,7 +33,6 @@ class DeployService():
         print('\nUploading %s...' % (build_details['apk_path']))
         download_url = self.storage.upload(self.__get_storage_output_path__(build_details), build_details['apk_path'])
 
-        print('uploading with release_type: ', self.release_type)
         upload_data = {
             self.timestamp: {
                 'releasedBy': self.storage.get_current_user_details()['uid'],
@@ -48,6 +47,7 @@ class DeployService():
 
 
     def __compose_project_output_path__(self, proj_name):
+        ''' Returns the database  path for new uploads to a project. '''
         return 'projects' + '/' + ''.join(proj_name.split('.')) + '/uploads'
 
 
