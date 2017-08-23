@@ -20,6 +20,7 @@ class RegistrationService():
             self.__create_user_with_email__()
             sys.exit(0)
 
+        self.login_with_email()
         self.__register_project__()
 
 
@@ -33,6 +34,18 @@ class RegistrationService():
         print('Registering project: ', proj_name)
 
         self.storage.register_project(self.__compose_project_output_path__(proj_name), data)
+        print('Done.')
+
+
+    def login_with_email(self):
+        ''' Login a user with email via auth service. '''
+        email, password = get_login_credentials()
+        try:
+            self.auth.login_with_email(email, password)
+            print('\nLogged in successfully.\n')
+        except Exception as e:
+            print('\nAn error occurred. Please check your connection, credentials and try again.\n')
+            sys.exit(1)
 
 
     def __compose_project_output_path__(self, proj_name):
