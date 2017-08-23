@@ -1,7 +1,7 @@
 ''' All CLI hooks are handled through here. '''
 import sys
 
-from lib.services import deploy_service, registration_service
+from lib.services import deploy_service, registration_service, invitation_service
 from lib.services.firebase_service import Firebase
 from lib.services.builder_service import builder
 from lib.constants.release_types import ReleaseTypes
@@ -53,7 +53,10 @@ def invite(email, role):
         print('"{0}" is not a valid email.'.format(email))
         sys.exit(1)
 
-    print('You are trying to invite: ', email)
+    invitation_service.InvitationService(
+        email,
+        Firebase()
+    ).delegate()
 
 
 cli.add_command(register)
