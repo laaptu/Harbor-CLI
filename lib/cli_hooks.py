@@ -49,11 +49,19 @@ def deploy(type):
 @click.option('--role', help='Role to register the user under. [qa, uat, dev]. This affects how they receive updates regarding releases. Default value of "dev" is assumed.')
 def invite(email, role):
     ''' Invite someone to the project. '''
+    if role is None:
+        role = ReleaseTypes.DEV.value
+
+    if role.lower() not in [release_type.value.lower() for release_type in ReleaseTypes]:
+        print('{0} is not a valid role. Please use "uat", "qa" or "dev".'.format(type))
+        sys.exit(1)
+
     if not is_valid_email(email):
         print('"{0}" is not a valid email.'.format(email))
         sys.exit(1)
 
     invitation_service.InvitationService(
+        role,
         email,
         Firebase()
     ).delegate()
