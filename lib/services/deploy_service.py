@@ -9,10 +9,12 @@ class DeployService():
 
     def __init__(
         self,
+        release_type,
         auth_service_instance,
         storage_instance,
         builder_instance
     ):
+        self.release_type =  release_type
         self.timestamp = str(int(time.time()))
         self.builder = builder_instance
         self.storage = storage_instance
@@ -22,21 +24,21 @@ class DeployService():
     def delegate(self):
         build_details = self.builder.build()
         self.login_with_email()
-        print('\nUploading %s...' % (build_details['apk_path']))
-        download_url = self.storage.upload(self.__get_storage_output_path__(build_details), build_details['apk_path'])
-
         try:
             proj_name = get_react_native_project_name()
         except FileNotFoundException as e:
             print(e.message)
             sys.exit(1)
 
-        print('download_url : ', download_url)
+        print('\nUploading %s...' % (build_details['apk_path']))
+        download_url = self.storage.upload(self.__get_storage_output_path__(build_details), build_details['apk_path'])
+
+        print('uploading with release_type: ', self.release_type)
         upload_data = {
             self.timestamp: {
                 'releasedBy': self.storage.get_current_user_details()['uid'],
                 'download_url': download_url,
-                'releaseType': 'uat'
+                'releaseType': self.release_type
             }
         }
 

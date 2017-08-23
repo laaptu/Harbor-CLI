@@ -36,6 +36,7 @@ def deploy(type):
         sys.exit(1)
 
     deploy_service.DeployService(
+        type,
         Firebase(),
         Firebase(),
         builder()()
