@@ -25,9 +25,9 @@ def register(u):
 
 
 @click.command()
-@click.option('--type', help='Release type [qa, uat, dev]')
+@click.option('--type', help='Release type [qa, uat, dev]. This affects the audience that receives notice of this release. Default value of "dev" is assumed')
 def deploy(type):
-    ''' Deploy your project once it's registered. '''
+    ''' Deploy your project once it has been registered. '''
     if type is None:
         type = ReleaseTypes.DEV.value
 
