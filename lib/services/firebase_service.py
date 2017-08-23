@@ -1,7 +1,8 @@
 import pyrebase
 
-from lib.config.firebase_config import firebase_config
 from lib.utils.singleton import Singleton
+from lib.config.firebase_config import firebase_config
+from lib.exceptions.UserNotFound import UserNotFoundException
 
 class Firebase(metaclass=Singleton):
     '''
@@ -53,18 +54,33 @@ class Firebase(metaclass=Singleton):
         })
 
 
+    def get_details_for_user_by_email(self, email):
+        ''' Get user details for an arbitrary registered email. '''
+        def get_details():
+            # Firebase doesn't suppporty dynamic key deep queries.
+            # So, we resort to client side filtering.
+            userdata =  self.db.child('users').get()
+            serializeddata = dict(userdata.val())
+            filter_user_email = lambda data: data['email'] == email
+            user_details = list(filter(filter_user_email, [serializeddata[v] for v in serializeddata]))
+
+            if len(user_details)  == 0:
+                raise UserNotFoundException('User not found.')
+
+            return user_details[0]
+
+        return get_details
+
+
     def get_current_user_details(self):
         ''' Get current  user details provided the user is logged in. '''
-        # Firebase doesn't suppporty dynamic key deep queries.
-        # So, we resort to client side filtering.
-        userdata =  self.db.child('users').get()
-        serializeddata = dict(userdata.val())
-        filter_user_email = lambda data: data['email'] == self.user['email']
-        user_details = list(filter(filter_user_email, [serializeddata[v] for v in serializeddata]))[0]
-
-        return user_details
+        return get_details_for_user_by_email(self.user['email'])
 
 
     def upload_project(self, output_path, data):
         ''' Upload a project. '''
         self.db.child(output_path).update(data)
+
+
+    def add_user_to_project(self, output_path, data):
+        self.db.child('members').child(output_path).update(data)
