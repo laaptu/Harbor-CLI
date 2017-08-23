@@ -5,6 +5,7 @@ from lib.services import deploy_service, registration_service
 from lib.services.firebase_service import Firebase
 from lib.services.builder_service import builder
 from lib.constants.release_types import ReleaseTypes
+from lib.utils.validators import is_valid_email
 
 import click
 
@@ -43,5 +44,18 @@ def deploy(type):
     ).delegate()
 
 
+@click.command()
+@click.argument('email')
+@click.option('--role', help='Role to register the user under. [qa, uat, dev]. This affects how they receive updates regarding releases. Default value of "dev" is assumed.')
+def invite(email, role):
+    ''' Invite someone to the project. '''
+    if not is_valid_email(email):
+        print('"{0}" is not a valid email.'.format(email))
+        sys.exit(1)
+
+    print('You are trying to invite: ', email)
+
+
 cli.add_command(register)
 cli.add_command(deploy)
+cli.add_command(invite)
