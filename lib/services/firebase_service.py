@@ -52,7 +52,10 @@ class Firebase(metaclass=Singleton):
         user_details = list(filter(filter_user_email, [serializeddata[v] for v in serializeddata]))[0]
 
         self.db.child('members').child(output_path).set({
-            user_details['uid']: True
+            user_details['uid']: {
+                'role': 'admin',
+                'notificationLevel': 'all'
+            }
         })
 
 
