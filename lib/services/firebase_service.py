@@ -80,3 +80,7 @@ class Firebase(metaclass=Singleton):
     def upload_project(self, output_path, data):
         ''' Upload a project. '''
         self.db.child(output_path).update(data)
+
+
+    def add_user_to_project(self, output_path, data):
+        self.db.child('members').child(output_path).update(data)
