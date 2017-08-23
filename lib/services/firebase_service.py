@@ -41,3 +41,14 @@ class Firebase(metaclass=Singleton):
     def register_project(self, output_path, data):
         ''' Register a project. '''
         self.db.child('projects').child(output_path).set(data)
+
+        # Firebase doesn't suppporty dynamic key deep queries.
+        # So, we resort to client side filtering.
+        userdata =  self.db.child('users').get()
+        serializeddata = dict(userdata.val())
+        filter_user_email = lambda data: data['email'] == self.user['email']
+        user_details = list(filter(filter_user_email, [serializeddata[v] for v in serializeddata]))[0]
+
+        self.db.child('members').child(output_path).set({
+            user_details['uid']: True
+        })
