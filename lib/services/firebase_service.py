@@ -74,7 +74,7 @@ class Firebase(metaclass=Singleton):
 
     def get_current_user_details(self):
         ''' Get current  user details provided the user is logged in. '''
-        return get_details_for_user_by_email(self.user['email'])
+        return self.get_details_for_user_by_email(self.user['email'])()
 
 
     def upload_project(self, output_path, data):
