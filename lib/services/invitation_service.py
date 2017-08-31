@@ -19,18 +19,22 @@ class InvitationService():
             print(e.message)
             sys.exit(1)
 
-        proj_members_path = self.__compose_member_output_path__(proj_name)
-        user_details = {
-            target_uid: {
+        proj_members_path = self.__compose_member_path__(target_uid)
+        user_details_for_proj = {
+            self.__compose_proj_path__(proj_name): {
                 'role': self.role,
-                'notificationLevel': 'all'
+                'notificationLevel': self.role
             }
         }
 
-        self.storage.add_user_to_project(proj_members_path, user_details)
+        self.storage.add_user_to_project(proj_members_path, user_details_for_proj)
         print('Invited "{0}" to "{1}" as "{2}"'.format(self.target_email, proj_name, self.role))
 
 
-    def __compose_member_output_path__(self, proj_name):
+    def __compose_member_path__(self, target_uid):
         ''' Returns the database  path for new uploads to a project. '''
+        return target_uid
+
+    def __acompose_proj_path__(self, proj_name):
         return ''.join(proj_name.split('.'))
+
