@@ -35,6 +35,6 @@ class InvitationService():
         ''' Returns the database  path for new uploads to a project. '''
         return target_uid
 
-    def __acompose_proj_path__(self, proj_name):
+    def __compose_proj_path__(self, proj_name):
         return ''.join(proj_name.split('.'))
 
