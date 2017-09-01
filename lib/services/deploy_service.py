@@ -1,5 +1,7 @@
 import sys
 import time
+from datetime import datetime
+import calendar
 
 from lib.services.stdio_service import get_login_credentials
 from lib.utils.gradle import get_react_native_project_name
@@ -15,11 +17,14 @@ class DeployService():
         builder_instance
     ):
         self.release_type =  release_type
-        self.timestamp = str(int(time.time()))
+        self.timestamp = self.__get_timestamp__()
         self.builder = builder_instance
         self.storage = storage_instance
         self.auth = auth_service_instance
 
+    def __get_timestamp__(self):
+        d = datetime.utcnow()
+        return str(calendar.timegm(d.utctimetuple()))
 
     def delegate(self):
         build_details = self.builder.build()
@@ -42,9 +47,18 @@ class DeployService():
         }
 
         self.storage.upload_project(self.__compose_project_output_path__(proj_name), upload_data)
+        # add metadata.
+        metadata = {
+            'lastReleasedBy': self.storage.get_current_user_details(),
+            'lastReleasedOn': self.timestamp
+        }
+
+        self.storage.upload_project(self.__compose_metadata_path__(proj_name), metadata)
 
         print('\nUpload successful. APK was deployed.')
 
+    def __compose_metadata_path__(self, proj_name):
+        return 'projects' + '/' + ''.join(proj_name.split('.')) + '/metadata'
 
     def __compose_project_output_path__(self, proj_name):
         ''' Returns the database  path for new uploads to a project. '''
