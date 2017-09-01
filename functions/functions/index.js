@@ -44,48 +44,63 @@ function onProjectRelease(event) {
 
   console.log('project_id "', project_id, '" was released with upload id: . ', upload_id);
 
-  const path = `/members/${project_id}`;
-  console.log('path = ', path)
+  const membersPath = '/members/';
 
-  admin.database().ref(path).once('value', function(snap) {
-    const userIds = Object.keys(snap.val());
+  admin
+    .database()
+    .ref(membersPath)
+    .once('value')
+    .then(snapshot => {
+      const userIds = Object.keys(snapshot.val());
 
-    for (let userId of userIds) {
-      let userTokensPath = `/users/${userId}`;
-      admin.database().ref(userTokensPath).once('value', function(snap) {
-        let userDetails = snap.val();
-        console.log('userDetail : ', userDetails);
+      for (let userId of userIds) {
+        admin
+          .database()
+          .ref(membersPath + userId)
+          .once('value')
+          .then(innerSnapshot => {
+            const projectListForUser = Object.keys(innerSnapshot.val());
 
-        if (!userDetails.fcmTokens) {
-          console.log('skipping for: ', userId);
-          return;
-        }
+            if (!projectListForUser.includes(project_id)) {
+              return;
+            }
 
-        let fcmTokensForUser = Object.keys(userDetails.fcmTokens);
+            const userPath = `/users/${userId}`;
 
-        const payload = {
-          notification: {
-            title: `A new update for ${project_id} is available.`,
-          }
-        };
+            admin.database().ref(userPath).once('value', function(snap) {
+              let userDetails = snap.val();
+              console.log('userDetail : ', userDetails);
 
-        for (let token of fcmTokensForUser) {
-          admin.messaging().sendToDevice(token, payload)
-            .then(function(response) {
-              // See the MessagingDevicesResponse reference documentation for
-              // the contents of response.
-              console.log("Successfully sent message:", response);
-            })
-            .catch(function(error) {
-              console.log("Error sending message:", error);
+              if (!userDetails.fcmTokens) {
+                console.log('skipping for: ', userId);
+                return;
+              }
+
+              let fcmTokensForUser = Object.keys(userDetails.fcmTokens);
+
+              const payload = {
+                notification: {
+                  title: `A new ship has arrived!`,
+                  body: `A new update for ${project_id} is available.`,
+                }
+              };
+
+              for (let token of fcmTokensForUser) {
+                admin.messaging().sendToDevice(token, payload)
+                  .then(function(response) {
+                    // See the MessagingDevicesResponse reference documentation for
+                    // the contents of response.
+                    console.log("Successfully sent message:", response);
+                  })
+                  .catch(function(error) {
+                    console.log("Error sending message:", error);
+                  });
+              }
+
             });
-        }
-
-      });
-    }
-
-  });
+          });
+      }
+    });
 }
-
 exports.registerEveryNewUserInDatabase = functions.auth.user().onCreate(saveNewUserToDatabase);
 exports.onProjectRelease = functions.database.ref('/projects/{proj_id}/uploads/{upload_id}').onWrite(onProjectRelease);
