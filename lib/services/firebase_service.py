@@ -46,7 +46,7 @@ class Firebase(metaclass=Singleton):
         self.db.child('projects').child(output_path).set(data)
         user_details = self.get_current_user_details()
 
-        self.db.child('members').child(user_details['uid']).set({
+        self.db.child('members').child(user_details['uid']).update({
             output_path: {
                 'role': 'admin',
                 'notificationLevel': 'all'
