@@ -4,6 +4,8 @@ from lib.services.stdio_service import get_login_credentials
 from lib.utils.gradle import get_react_native_project_name
 from lib.utils.json_parser import json_parse
 from lib.exceptions.FileNotFound import FileNotFoundException
+from lib.utils.decorators import requires_presence_of_file
+from lib.constants.paths import paths
 
 class RegistrationService():
 
@@ -36,16 +38,30 @@ class RegistrationService():
             print(e.message)
             sys.exit(1)
 
+        try:
+            print('Searching for icons..')
+            self.find_icons()
+            icon_path = self.storage.upload(package_json_name + '/icon.png', paths['ICONS_XXXHDPI'])
+        except FileNotFoundException as e:
+            print(e.message)
+
         data = {
+            'uploads': {},
+            'iconUrl': icon_path,
             'name': package_json_name,
-            'packageName': package_name,
-            'uploads': {}
+            'packageName': package_name
         }
 
         print('Registering project: ', package_name)
-
         self.storage.register_project(self.__compose_project_output_path__(package_name), data)
         print('Done.')
+
+    @requires_presence_of_file(
+        paths['ICONS_XXXHDPI'],
+        lambda path: 'Cannot find icons in path {0}. Skipping..'.format(path)
+    )
+    def find_icons(self):
+        return True
 
 
     def login_with_email(self):
