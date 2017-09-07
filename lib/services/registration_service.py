@@ -2,6 +2,7 @@ import sys
 
 from lib.services.stdio_service import get_login_credentials
 from lib.utils.gradle import get_react_native_project_name
+from lib.utils.json_parser import json_parse
 from lib.exceptions.FileNotFound import FileNotFoundException
 
 class RegistrationService():
@@ -28,19 +29,22 @@ class RegistrationService():
     def __register_project__(self):
         ''' Register a project on the server. '''
         try:
-            proj_name = get_react_native_project_name()
+            package_name = get_react_native_project_name()
+            package_json = json_parse('package.json')
+            package_json_name = package_json['name']
         except FileNotFoundException as e:
             print(e.message)
             sys.exit(1)
 
         data = {
-            'name': proj_name,
+            'name': package_json_name,
+            'packageName': package_name,
             'uploads': {}
         }
 
-        print('Registering project: ', proj_name)
+        print('Registering project: ', package_name)
 
-        self.storage.register_project(self.__compose_project_output_path__(proj_name), data)
+        self.storage.register_project(self.__compose_project_output_path__(package_name), data)
         print('Done.')
 
 
