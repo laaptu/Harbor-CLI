@@ -41,8 +41,9 @@ class RegistrationService():
         try:
             print('Searching for icons..')
             self.find_icons()
-            icon_path = self.storage.upload(package_json_name + '/icon.png', paths['ICONS_XXXHDPI'])
+            icon_path = self.storage.upload(package_json_name + '/icon.png', paths['ICONS_XXHDPI'])
         except FileNotFoundException as e:
+            icon_path = None
             print(e.message)
 
         data = {
@@ -57,7 +58,7 @@ class RegistrationService():
         print('Done.')
 
     @requires_presence_of_file(
-        paths['ICONS_XXXHDPI'],
+        paths['ICONS_XXHDPI'],
         lambda path: 'Cannot find icons in path {0}. Skipping..'.format(path)
     )
     def find_icons(self):
