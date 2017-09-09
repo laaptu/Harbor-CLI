@@ -3,16 +3,20 @@ import sys
 from lib.services.stdio_service import get_login_credentials
 from lib.utils.gradle import get_react_native_project_name
 from lib.exceptions.FileNotFound import FileNotFoundException
+from lib.anchor import Anchor
+from lib.plugins.firebase import FirebasePlugin
 
-class RegistrationService():
+class RegistrationService(Anchor):
 
     def __init__(
         self,
         auth_service_instance,
         storage_instance
     ):
+        super().__init__()
         self.auth = auth_service_instance
         self.storage = storage_instance
+        self.apply(FirebasePlugin())
 
 
     def delegate(self, is_user_registration=False):
@@ -29,6 +33,7 @@ class RegistrationService():
         ''' Register a project on the server. '''
         try:
             proj_name = get_react_native_project_name()
+            self.apply_plugins('will_register', proj_name)
         except FileNotFoundException as e:
             print(e.message)
             sys.exit(1)
@@ -41,6 +46,7 @@ class RegistrationService():
         print('Registering project: ', proj_name)
 
         self.storage.register_project(self.__compose_project_output_path__(proj_name), data)
+        self.apply_plugins('did_register', proj_name)
         print('Done.')
 
 
