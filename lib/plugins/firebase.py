@@ -5,6 +5,7 @@ class FirebasePlugin():
 
     def apply(self, compiler):
         compiler.plugin('register_user', self.register_user)
+        compiler.plugin('add_user', self.add_user_to_project)
         compiler.plugin('register_project', self.register_project)
 
 
@@ -29,6 +30,11 @@ class FirebasePlugin():
 
 
     def register_project(self, **kwargs):
+        '''
+        Registers a project.
+        Checks to see if there is a duplicate project with the same package name.
+        Registers the current user as an admin.
+        '''
         def project_output_path(proj_name):
             return ''.join(proj_name.split('.'))
 
@@ -60,6 +66,27 @@ class FirebasePlugin():
             update=True
         )
         print('Successfully registered.')
+
+
+    def add_user_to_project(self, **kwargs):
+        def proj_path(proj_name):
+            return ''.join(proj_name.split('.'))
+
+        def members_output_path(user, proj_name):
+            return 'members/' + user['uid'] + '/' + proj_path(proj_name)
+
+        user, target_email, role, project_name = [kwargs[k] for k in ('user', 'email', 'role', 'project_name')]
+        data = {
+            'role': role,
+            'notificationLevel': role
+        }
+        Firebase().write_to_db(
+            members_output_path(user, project_name),
+            data,
+            update=True
+        )
+        print('Invited "{0}" to "{1}" as "{2}"'.format(target_email, project_name, role))
+
 
     def will_register(self, compilation):
         pass

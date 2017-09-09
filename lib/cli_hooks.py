@@ -60,7 +60,6 @@ def invite(email, role):
     invitation_service.InvitationService(
         role,
         email,
-        Firebase()
     ).delegate()
 
 

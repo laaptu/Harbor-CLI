@@ -3,11 +3,12 @@ import time
 from datetime import datetime
 import calendar
 
+from lib.anchor import Anchor
 from lib.services.stdio_service import get_login_credentials
 from lib.utils.gradle import get_react_native_project_name
 from lib.exceptions.FileNotFound import FileNotFoundException
 
-class DeployService():
+class DeployService(Anchor):
 
     def __init__(
         self,
@@ -16,6 +17,7 @@ class DeployService():
         storage_instance,
         builder_instance
     ):
+        super().__init__()
         self.release_type =  release_type
         self.timestamp = self.__get_timestamp__()
         self.builder = builder_instance
