@@ -1,10 +1,12 @@
 import sys
 from lib.services.firebase_service import Firebase
+from lib.utils.destructure import destructure
 
 class FirebasePlugin():
 
     def apply(self, compiler):
         compiler.plugin('register_user', self.register_user)
+        compiler.plugin('add_user', self.add_user_to_project)
         compiler.plugin('register_project', self.register_project)
 
 
@@ -18,8 +20,7 @@ class FirebasePlugin():
                 print('\nAn error occurred. Please check your connection, credentials and try again.\n')
             sys.exit(1)
 
-        email = kwargs['email']
-        password = kwargs['password']
+        email, password = destructure(kwargs)('email', 'password')
         try:
             Firebase().signup_via_email(email, password)
             print('\nSigned up successfully.\n')
@@ -29,13 +30,18 @@ class FirebasePlugin():
 
 
     def register_project(self, **kwargs):
+        '''
+        Registers a project.
+        Checks to see if there is a duplicate project with the same package name.
+        Registers the current user as an admin.
+        '''
         def project_output_path(proj_name):
             return ''.join(proj_name.split('.'))
 
         def members_output_path(user):
             return user['uid']
 
-        name, package_name, iconUrl = [kwargs[k] for k in ('name', 'package_name', 'iconUrl')]
+        name, package_name, iconUrl = destructure(kwargs)('name', 'package_name', 'iconUrl')
         existing  = Firebase().get_from_db('projects/' + project_output_path(package_name))
         if existing.val() is not None:
             print('This package name is already registered. If you want to update your details, please use the "--resync" flag with admin credentials.')
@@ -60,6 +66,28 @@ class FirebasePlugin():
             update=True
         )
         print('Successfully registered.')
+
+
+    def add_user_to_project(self, **kwargs):
+        def proj_path(proj_name):
+            return ''.join(proj_name.split('.'))
+
+        def members_output_path(user, proj_name):
+            return 'members/' + user['uid'] + '/' + proj_path(proj_name)
+
+        target_email, role, project_name = destructure(kwargs)('email', 'role', 'project_name')
+        user = Firebase().get_details_for_user_by_email(target_email)()
+        data = {
+            'role': role,
+            'notificationLevel': role
+        }
+        Firebase().write_to_db(
+            members_output_path(user, project_name),
+            data,
+            update=True
+        )
+        print('Invited "{0}" to "{1}" as "{2}"'.format(target_email, project_name, role))
+
 
     def will_register(self, compilation):
         pass
