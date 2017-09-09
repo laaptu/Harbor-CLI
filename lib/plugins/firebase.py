@@ -5,11 +5,11 @@ class FirebasePlugin():
 
     def apply(self, compiler):
         compiler.plugin('register_user', self.register_user)
-        compiler.plugin('did_register', self.did_register)
-        compiler.plugin('will_register', self.will_register)
+        compiler.plugin('register_project', self.register_project)
 
 
     def register_user(self, **kwargs):
+        ''' Register a single user. '''
         def handle_error(e):
             error = eval(e.args[1])
             if error['error']['message'] == 'EMAIL_EXISTS':
@@ -27,6 +27,34 @@ class FirebasePlugin():
         except Exception as e:
             handle_error(e)
 
+
+    def register_project(self, **kwargs):
+        def project_output_path(proj_name):
+            return ''.join(proj_name.split('.'))
+
+        def members_output_path(user):
+            return user['uid']
+
+        name, package_name, iconUrl = [kwargs[k] for k in ('name', 'package_name', 'iconUrl')]
+        project_data = {
+            'name': name,
+            'uploads': {},
+            'iconUrl': iconUrl,
+            'packageName': package_name,
+        }
+        member_admin_data = {
+            'role': 'admin',
+            'notificationLevel': 'all'
+        };
+        Firebase().write_to_db(
+            'projects/' + project_output_path(package_name),
+            project_data
+        )
+        Firebase().write_to_db(
+            'members/' + members_output_path(Firebase().get_current_user_details()) + '/' + project_output_path(package_name),
+            member_admin_data,
+            update=True
+        )
 
     def will_register(self, compilation):
         pass

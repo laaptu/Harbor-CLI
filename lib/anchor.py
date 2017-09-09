@@ -5,35 +5,35 @@ class Anchor():
         self._plugins = {}
 
 
-    def apply_plugins(self, name, *args, **kwargs):
-        ''' Apply plugins registered for a name. '''
-        if not self._plugins[name]:
+    def apply_plugins(self, event, *args, **kwargs):
+        ''' Apply plugins registered for a event. '''
+        if not self._plugins[event]:
             return
 
-        plugins = self._plugins[name]
+        plugins = self._plugins[event]
         for plugin in plugins:
             plugin(*args, **kwargs)
 
 
-    def has_plugins(self, name):
-        ''' Check if any plugins are registered to a name. '''
-        if name not in self._plugins:
+    def has_plugins(self, event):
+        ''' Check if any plugins are registered to a event. '''
+        if event not in self._plugins:
             return False
-        plugins = self._plugins[name]
+        plugins = self._plugins[event]
 
         return len(plugins)
 
 
-    def plugin(self, name, fn):
-        ''' Register a plugin under a name. '''
-        if isinstance(name, list):
-            for n in name:
+    def plugin(self, event, fn):
+        ''' Register a plugin under a event. '''
+        if isinstance(event, list):
+            for n in event:
                 self.plugin(n, fn)
             return
-        if name not in self._plugins:
-            self._plugins[name] = [fn]
+        if event not in self._plugins:
+            self._plugins[event] = [fn]
         else:
-            self._plugins[name].append(fn)
+            self._plugins[event].append(fn)
 
 
     def apply(self, *args):
