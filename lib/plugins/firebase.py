@@ -1,5 +1,6 @@
 import sys
 from lib.services.firebase_service import Firebase
+from lib.utils.destructure import destructure
 
 class FirebasePlugin():
 
@@ -19,8 +20,7 @@ class FirebasePlugin():
                 print('\nAn error occurred. Please check your connection, credentials and try again.\n')
             sys.exit(1)
 
-        email = kwargs['email']
-        password = kwargs['password']
+        email, password = destructure(kwargs)('email', 'password')
         try:
             Firebase().signup_via_email(email, password)
             print('\nSigned up successfully.\n')
@@ -41,7 +41,7 @@ class FirebasePlugin():
         def members_output_path(user):
             return user['uid']
 
-        name, package_name, iconUrl = [kwargs[k] for k in ('name', 'package_name', 'iconUrl')]
+        name, package_name, iconUrl = destructure(kwargs)('name', 'package_name', 'iconUrl')
         existing  = Firebase().get_from_db('projects/' + project_output_path(package_name))
         if existing.val() is not None:
             print('This package name is already registered. If you want to update your details, please use the "--resync" flag with admin credentials.')
@@ -75,7 +75,7 @@ class FirebasePlugin():
         def members_output_path(user, proj_name):
             return 'members/' + user['uid'] + '/' + proj_path(proj_name)
 
-        target_email, role, project_name = [kwargs[k] for k in ('email', 'role', 'project_name')]
+        target_email, role, project_name = destructure(kwargs)('email', 'role', 'project_name')
         user = Firebase().get_details_for_user_by_email(target_email)()
         data = {
             'role': role,
