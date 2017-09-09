@@ -41,6 +41,9 @@ class Firebase(metaclass=Singleton):
         self.auth.create_user_with_email_and_password(email, password)
 
 
+    def get_from_db(self, path):
+        return self.db.child(path).get()
+
     def write_to_db(self, output_path, data, **kwargs):
         if 'update' not in kwargs:
             self.db.child(output_path).set(data)

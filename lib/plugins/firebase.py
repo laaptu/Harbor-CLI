@@ -36,6 +36,10 @@ class FirebasePlugin():
             return user['uid']
 
         name, package_name, iconUrl = [kwargs[k] for k in ('name', 'package_name', 'iconUrl')]
+        existing  = Firebase().get_from_db('projects/' + project_output_path(package_name))
+        if existing.val() is not None:
+            print('This package name is already registered. If you want to update your details, please use the "--resync" flag with admin credentials.')
+            sys.exit(1)
         project_data = {
             'name': name,
             'uploads': {},
@@ -55,6 +59,7 @@ class FirebasePlugin():
             member_admin_data,
             update=True
         )
+        print('Successfully registered.')
 
     def will_register(self, compilation):
         pass

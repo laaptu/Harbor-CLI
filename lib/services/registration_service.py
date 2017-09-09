@@ -38,12 +38,11 @@ class RegistrationService(Anchor):
             sys.exit(1)
 
         try:
-            print('Searching for icons..')
             self.find_icons()
             icon_path = Firebase().upload(package_json_name + '/icon.png', paths['ICONS_XXHDPI'])
         except FileNotFoundException as e:
             icon_path = None
-            print(e.message)
+            print('Could not find icons.. ignoring.')
 
         self.apply_plugins('register_project', name=package_json_name, package_name=package_name, iconUrl=icon_path)
 
