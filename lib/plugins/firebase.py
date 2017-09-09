@@ -75,7 +75,8 @@ class FirebasePlugin():
         def members_output_path(user, proj_name):
             return 'members/' + user['uid'] + '/' + proj_path(proj_name)
 
-        user, target_email, role, project_name = [kwargs[k] for k in ('user', 'email', 'role', 'project_name')]
+        target_email, role, project_name = [kwargs[k] for k in ('email', 'role', 'project_name')]
+        user = Firebase().get_details_for_user_by_email(target_email)()
         data = {
             'role': role,
             'notificationLevel': role
