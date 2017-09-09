@@ -35,9 +35,6 @@ class Anchor():
         else:
             self._plugins[name].append(fn)
 
-        print('Just registered plugin ', fn)
-        print('Staate is now: ', self._plugins)
-
 
     def apply(self, *args):
         ''' Attaches the plugins to the instance. '''
