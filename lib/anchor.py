@@ -11,7 +11,7 @@ class Anchor():
             return
 
         plugins = self._plugins[name]
-        for _, plugin in plugins.items():
+        for plugin in plugins:
             plugin(*args, **kwargs)
 
 
@@ -35,8 +35,11 @@ class Anchor():
         else:
             self._plugins[name].append(fn)
 
+        print('Just registered plugin ', fn)
+        print('Staate is now: ', self._plugins)
+
 
     def apply(self, *args):
         ''' Attaches the plugins to the instance. '''
-        for arg in list(args):
-            arg(self)
+        for arg in args:
+            arg.apply(self)
