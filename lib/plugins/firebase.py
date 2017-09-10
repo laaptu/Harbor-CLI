@@ -120,8 +120,8 @@ class FirebasePlugin(Anchor):
             return 'projects' + '/' + ''.join(package_name.split('.')) + '/metadata'
 
         now = timestamp()
-        package_name, build_details, release_type = destructure(kwargs)(
-            'package_name', 'build_details', 'release_type'
+        build_details, release_type = destructure(kwargs)(
+            'build_details', 'release_type'
         )
         user = Firebase().get_current_user_details()
         print('\nUploading %s...' % (build_details['apk_path']))
@@ -150,6 +150,7 @@ class FirebasePlugin(Anchor):
             'release_type': release_type,
             'build_details': build_details,
         }
+        package_name = build_details['metainf']['package_name']
         self.apply_plugins('deploy/did_upload', compilation)
         Firebase().write_to_db(
             project_path(package_name, now),
