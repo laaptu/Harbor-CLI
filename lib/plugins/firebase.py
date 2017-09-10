@@ -131,11 +131,6 @@ class FirebasePlugin(Anchor):
             storage_path(build_details, now),
             build_details['apk_path']
         )
-        self.apply_plugins('deploy/did_upload', {
-            build_details: build_details,
-            url: url,
-            user:user
-        })
         upload_data = {
             'releasedBy': user['uid'],
             'download_url': url,
@@ -145,12 +140,14 @@ class FirebasePlugin(Anchor):
             'lastReleasedBy': user,
             'lastReleasedOn': now,
         }
-        self.apply_plugins('deploy/will_deploy', {
+        compilation = {
             url: url,
             user:user,
+            metadata: metadata,
             release_type: release_type,
             build_details: build_details,
-        })
+        }
+        self.apply_plugins(['deploy/did_upload', 'deploy/will_deploy'], compilation)
         Firebase().write_to_db(
             project_path(package_name, now),
             upload_data,
