@@ -4,8 +4,6 @@ from lib.anchor import Anchor
 from lib.utils.destructure import destructure
 from lib.services.firebase_service import Firebase
 
-from lib.plugins.mail import MailPlugin
-
 class FirebasePlugin(Anchor):
 
     def __init__(self):
@@ -88,6 +86,12 @@ class FirebasePlugin(Anchor):
             return 'members/' + user['uid'] + '/' + proj_path(proj_name)
 
         target_email, role, project_name = destructure(kwargs)('email', 'role', 'project_name')
+
+        existing = Firebase().get_from_db('projects/' + proj_path(project_name))
+        if existing.val() is None:
+            print('The project does not exist.')
+            sys.exit(1)
+
         user = Firebase().get_details_for_user_by_email(target_email)()
         data = {
             'role': role,
