@@ -18,12 +18,6 @@ class DeployService(Anchor):
         self.apply(FirebasePlugin())
         self.builder = builder()()
         self.release_type =  release_type
-        self.timestamp = self.__get_timestamp__()
-
-
-    def __get_timestamp__(self):
-        d = datetime.utcnow()
-        return str(calendar.timegm(d.utctimetuple()))
 
 
     def delegate(self):
