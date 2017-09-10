@@ -1,4 +1,14 @@
+''' A small synchronous plugin applicator module. '''
+
 class Anchor():
+    '''
+    Anchor is a small but powerful way to architect libraries.
+    Classes are created by base classing Anchor.
+    Call apply to register callbacks on any plugin.
+    The plugins can be called via "apply_plugins".
+    Plugins would generally receive a single arg - "compilation"
+    Very similar to webpack's tapable. (https://github.com/webpack/tapable)
+    '''
 
     def __init__(self):
         ''' Initialize our plugin pool. '''
@@ -8,8 +18,8 @@ class Anchor():
     def apply_plugins(self, event, *args, **kwargs):
         ''' Apply plugins registered for a event. '''
         if isinstance(event, list):
-            for n in event:
-                self.apply_plugins(n, args, kwargs)
+            for name in event:
+                self.apply_plugins(name, args, kwargs)
             return
 
         if event not in self._plugins:
@@ -28,16 +38,16 @@ class Anchor():
         return len(plugins)
 
 
-    def plugin(self, event, fn):
+    def plugin(self, event, callback_function):
         ''' Register a plugin under a event. '''
         if isinstance(event, list):
-            for n in event:
-                self.plugin(n, fn)
+            for name in event:
+                self.plugin(name, callback_function)
             return
         if event not in self._plugins:
-            self._plugins[event] = [fn]
+            self._plugins[event] = [callback_function]
         else:
-            self._plugins[event].append(fn)
+            self._plugins[event].append(callback_function)
 
 
     def apply(self, *args):

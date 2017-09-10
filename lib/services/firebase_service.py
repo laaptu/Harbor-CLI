@@ -1,3 +1,6 @@
+'''
+Handle firebase SDK communication through here via PyreBase
+'''
 import pyrebase
 
 from lib.utils.singleton import Singleton
@@ -9,12 +12,12 @@ class Firebase(metaclass=Singleton):
     Handle firebase comm. with this class. Make this a singleton using a metaclass.
     '''
 
-    def __init__(self, config=firebase_config):
+    def __init__(self):
         ''' Initialize auth, db, storage handles. '''
-        self.config = config
+        self.config = firebase_config
         self.firebase = pyrebase.initialize_app(self.config)
         self.auth = self.firebase.auth()
-        self.db = self.firebase.database()
+        self.database = self.firebase.database()
         self.storage = self.firebase.storage()
         self.user = None
 
@@ -42,26 +45,36 @@ class Firebase(metaclass=Singleton):
 
 
     def get_from_db(self, path):
-        return self.db.child(path).get()
+        ''' Get arbitrary data fro a database path. '''
+        return self.database.child(path).get()
+
 
     def write_to_db(self, output_path, data, **kwargs):
+        '''
+        Write arbitrary  data to a output_path, allows for updating instead of overwriting.
+        '''
         if 'update' not in kwargs:
-            self.db.child(output_path).set(data)
+            self.database.child(output_path).set(data)
         else:
-            self.db.child(output_path).update(data)
+            self.database.child(output_path).update(data)
 
 
     def get_details_for_user_by_email(self, email):
-        ''' Get user details for an arbitrary registered email. '''
+        '''
+        A thunk that gets user details for an arbitrary registered email.
+        '''
         def get_details():
+            ''' Actual function that gets the details from Firebase. '''
             # Firebase doesn't suppporty dynamic key deep queries.
             # So, we resort to client side filtering.
-            userdata =  self.db.child('users').get()
+            userdata = self.database.child('users').get()
             serializeddata = dict(userdata.val())
             filter_user_email = lambda data: data['email'] == email
-            user_details = list(filter(filter_user_email, [serializeddata[v] for v in serializeddata]))
+            user_details = list(
+                filter(filter_user_email, [serializeddata[v] for v in serializeddata])
+            )
 
-            if len(user_details)  == 0:
+            if not user_details:
                 raise UserNotFoundException('User not found.')
 
             return user_details[0]
@@ -76,8 +89,9 @@ class Firebase(metaclass=Singleton):
 
     def upload_project(self, output_path, data):
         ''' Upload a project. '''
-        self.db.child(output_path).update(data)
+        self.database.child(output_path).update(data)
 
 
     def add_user_to_project(self, output_path, data):
-        self.db.child('members').child(output_path).update(data)
+        ''' Add a user to a project. '''
+        self.database.child('members').child(output_path).update(data)
