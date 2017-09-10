@@ -35,7 +35,8 @@ def strategy_react_native():
 
       build_details.update({
           'metainf': {
-              'name': project_data['name']
+              'name': project_data['name'],
+              'package_name': gradle.get_react_native_project_name()
           }
       })
 
