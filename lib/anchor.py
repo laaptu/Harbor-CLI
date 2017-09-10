@@ -7,9 +7,13 @@ class Anchor():
 
     def apply_plugins(self, event, *args, **kwargs):
         ''' Apply plugins registered for a event. '''
-        if not self._plugins[event]:
+        if isinstance(event, list):
+            for n in event:
+                self.apply_plugins(n, args, kwargs)
             return
 
+        if event not in self._plugins:
+            return
         plugins = self._plugins[event]
         for plugin in plugins:
             plugin(*args, **kwargs)
