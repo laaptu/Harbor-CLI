@@ -1,8 +1,14 @@
 import sys
+
+from lib.anchor import Anchor
 from lib.services.firebase_service import Firebase
 from lib.utils.destructure import destructure
 
-class FirebasePlugin():
+class FirebasePlugin(Anchor):
+
+    def __init__(self):
+        super().__init__()
+        super().apply() # TODO
 
     def apply(self, compiler):
         compiler.plugin('register_user', self.register_user)
@@ -115,28 +121,50 @@ class FirebasePlugin():
         package_name, build_details, release_type = destructure(kwargs)(
             'package_name', 'build_details', 'release_type'
         )
+        user = Firebase().get_current_user_details()
         print('\nUploading %s...' % (build_details['apk_path']))
+        self.apply_plugins('deploy/will_upload', {
+            build_details: build_details,
+            user:user
+        })
         url = Firebase().upload(
             storage_path(build_details, now),
             build_details['apk_path']
         )
-        user = Firebase().get_current_user_details()
+        self.apply_plugins('deploy/did_upload', {
+            build_details: build_details,
+            url: url,
+            user:user
+        })
         upload_data = {
             'releasedBy': user['uid'],
             'download_url': url,
             'releaseType': release_type
         }
+        metadata = {
+            'lastReleasedBy': user,
+            'lastReleasedOn': now,
+        }
+        self.apply_plugins('deploy/will_deploy', {
+            url: url,
+            user:user,
+            release_type: release_type,
+            build_details: build_details,
+        })
         Firebase().write_to_db(
             project_path(package_name, now),
             upload_data,
             update=True
         )
-        metadata = {
-            'lastReleasedBy': user,
-            'lastReleasedOn': now,
-        }
         Firebase().write_to_db(
             metadata_path(package_name),
             metadata
         )
+        self.apply_plugins('deploy/did_deploy', {
+            url: url,
+            user:user,
+            metdata: metadata,
+            release_type: release_type,
+            build_details: build_details,
+        })
         print('\nUpload successful. APK was deployed.')
