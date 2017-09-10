@@ -1,14 +1,16 @@
 import sys
 
 from lib.anchor import Anchor
-from lib.services.firebase_service import Firebase
 from lib.utils.destructure import destructure
+from lib.services.firebase_service import Firebase
+
+from lib.plugins.mail import MailPlugin
 
 class FirebasePlugin(Anchor):
 
     def __init__(self):
         super().__init__()
-        super().apply() # TODO
+        super().apply()
 
     def apply(self, compiler):
         compiler.plugin('register_user', self.register_user)
@@ -123,9 +125,10 @@ class FirebasePlugin(Anchor):
         )
         user = Firebase().get_current_user_details()
         print('\nUploading %s...' % (build_details['apk_path']))
-        self.apply_plugins('deploy/will_upload', {
-            build_details: build_details,
-            user:user
+        self.apply_plugins(['deploy/will_upload', 'deploy/will_deploy'], {
+            'user': user,
+            'release_type': release_type,
+            'build_details': build_details,
         })
         url = Firebase().upload(
             storage_path(build_details, now),
@@ -141,13 +144,13 @@ class FirebasePlugin(Anchor):
             'lastReleasedOn': now,
         }
         compilation = {
-            url: url,
-            user:user,
-            metadata: metadata,
-            release_type: release_type,
-            build_details: build_details,
+            'url': url,
+            'user':user,
+            'metadata': metadata,
+            'release_type': release_type,
+            'build_details': build_details,
         }
-        self.apply_plugins(['deploy/did_upload', 'deploy/will_deploy'], compilation)
+        self.apply_plugins('deploy/did_upload', compilation)
         Firebase().write_to_db(
             project_path(package_name, now),
             upload_data,
@@ -158,10 +161,10 @@ class FirebasePlugin(Anchor):
             metadata
         )
         self.apply_plugins('deploy/did_deploy', {
-            url: url,
-            user:user,
-            metdata: metadata,
-            release_type: release_type,
-            build_details: build_details,
+            'url': url,
+            'user':user,
+            'metdata': metadata,
+            'release_type': release_type,
+            'build_details': build_details,
         })
         print('\nUpload successful. APK was deployed.')
