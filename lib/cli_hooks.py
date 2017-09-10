@@ -43,7 +43,9 @@ def deploy(deploy_type):
     if deploy_type is None:
         deploy_type = ReleaseTypes.DEV.value
 
-    validate_deploy_type(deploy_type, [release_type.value.lower() for release_type in ReleaseTypes])
+    validate_deploy_type(deploy_type,
+                         [release_type.value.lower() for release_type in ReleaseTypes]
+                        )
     deploy_service.DeployService(deploy_type).delegate()
 
 

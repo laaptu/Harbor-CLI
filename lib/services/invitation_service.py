@@ -6,6 +6,7 @@ from lib.plugins.firebase import FirebasePlugin
 from lib.services.firebase_service import Firebase
 from lib.services.stdio_service import login_with_email
 
+
 class InvitationService(Anchor):
     '''
     An Anchor class to invite people to a project.
@@ -18,7 +19,6 @@ class InvitationService(Anchor):
         self.apply(FirebasePlugin())
         self.role = role
         self.target_email = email
-
 
     def delegate(self):
         ''' Public method used as the CLI hook. '''

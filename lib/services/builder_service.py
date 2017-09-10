@@ -9,6 +9,7 @@ from lib.services.build_strategies import build_strategies
 from lib.exceptions.DirNotFound import DirNotFoundException
 from lib.exceptions.FileNotFound import FileNotFoundException
 
+
 def builder(build_platform=BuildPlatforms.REACT_NATIVE):
     ''' Returns a builder class for a specific platform '''
     def build():

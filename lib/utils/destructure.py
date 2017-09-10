@@ -1,6 +1,10 @@
-def destructure(d):
+'''
+A small util to shallow destructure a dictionary.
+'''
+def destructure(dictionary):
     ''' Destructures a dictionary. '''
-    def destructureArgs(*args):
-        return [d[k] for k in args]
+    def destructure_args(*args):
+        ''' Return array of values for keys '''
+        return [dictionary[key] for key in args]
 
-    return destructureArgs
+    return destructure_args

@@ -4,7 +4,7 @@ Handle registration of users/projects from here.
 import sys
 
 from lib.anchor import Anchor
-from lib.constants.paths import paths
+from lib.constants.paths import PATHS
 from lib.services.stdio_service import get_login_credentials, login_with_email
 from lib.services.firebase_service import Firebase
 from lib.utils.gradle import get_react_native_project_name
@@ -12,6 +12,7 @@ from lib.utils.json_parser import json_parse
 from lib.exceptions.FileNotFound import FileNotFoundException
 from lib.plugins.firebase import FirebasePlugin
 from lib.utils.decorators import requires_presence_of_file
+
 
 class RegistrationService(Anchor):
     '''
@@ -24,7 +25,6 @@ class RegistrationService(Anchor):
         super().__init__()
         self.apply(FirebasePlugin())
 
-
     def delegate(self, is_user_registration=False):
         ''' Delegate for the CLI. The only public method. '''
         if is_user_registration:
@@ -33,7 +33,6 @@ class RegistrationService(Anchor):
 
         login_with_email(Firebase())
         self.__register_project__()
-
 
     def __register_project__(self):
         ''' Register a project on the server. '''
@@ -47,7 +46,7 @@ class RegistrationService(Anchor):
 
         try:
             find_icons()
-            icon_path = Firebase().upload(package_json_name + '/icon.png', paths['ICONS_XXHDPI'])
+            icon_path = Firebase().upload(package_json_name + '/icon.png', PATHS['ICONS_XXHDPI'])
         except FileNotFoundException:
             icon_path = None
             print('Could not find icons.. ignoring.')
@@ -58,8 +57,9 @@ class RegistrationService(Anchor):
                            iconUrl=icon_path
                           )
 
+
 @requires_presence_of_file(
-    paths['ICONS_XXHDPI'],
+    PATHS['ICONS_XXHDPI'],
     'Cannot find icons in path {0}. Skipping..'.format
 )
 def find_icons():

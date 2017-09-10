@@ -1,6 +1,6 @@
 import os
 
-paths = {
+PATHS = {
     'CONFIG_FILE': '',
     'REACT_NATIVE_PACKAGE_JSON': 'package.json',
     'REACT_NATIVE_ANDROID_DIR': os.getcwd() + '/android',
