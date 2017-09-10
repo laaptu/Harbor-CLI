@@ -41,17 +41,14 @@ class Firebase(metaclass=Singleton):
         self.auth.create_user_with_email_and_password(email, password)
 
 
-    def register_project(self, output_path, data):
-        ''' Register a project. '''
-        self.db.child('projects').child(output_path).set(data)
-        user_details = self.get_current_user_details()
+    def get_from_db(self, path):
+        return self.db.child(path).get()
 
-        self.db.child('members').child(user_details['uid']).update({
-            output_path: {
-                'role': 'admin',
-                'notificationLevel': 'all'
-            }
-        })
+    def write_to_db(self, output_path, data, **kwargs):
+        if 'update' not in kwargs:
+            self.db.child(output_path).set(data)
+        else:
+            self.db.child(output_path).update(data)
 
 
     def get_details_for_user_by_email(self, email):

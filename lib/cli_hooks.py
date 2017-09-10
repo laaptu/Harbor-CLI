@@ -3,7 +3,6 @@ import sys
 
 from lib.services import deploy_service, registration_service, invitation_service
 from lib.services.firebase_service import Firebase
-from lib.services.builder_service import builder
 from lib.constants.release_types import ReleaseTypes
 from lib.utils.validators import is_valid_email
 
@@ -19,10 +18,7 @@ def cli():
 @click.option('-u', is_flag=True, help='Flag to indicate if a user is to be registered.')
 def register(u):
     ''' Register your project/user on the server. '''
-    registration_service.RegistrationService(
-        Firebase(),
-        Firebase()
-    ).delegate(True if u else False)
+    registration_service.RegistrationService().delegate(True if u else False)
 
 
 @click.command()
@@ -36,12 +32,7 @@ def deploy(type):
         print('"{0}" is not a valid release type. Please use "uat", "qa" or "dev".'.format(type))
         sys.exit(1)
 
-    deploy_service.DeployService(
-        type,
-        Firebase(),
-        Firebase(),
-        builder()()
-    ).delegate()
+    deploy_service.DeployService(type).delegate()
 
 
 @click.command()
@@ -63,7 +54,6 @@ def invite(email, role):
     invitation_service.InvitationService(
         role,
         email,
-        Firebase()
     ).delegate()
 
 
