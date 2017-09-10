@@ -25,6 +25,6 @@ def login_with_email(login_service_instance):
     try:
         login_service_instance.login_with_email(email, password)
         print('\nLogged in successfully.\n')
-    except Exception:
+    except Exception: #pylint: disable=broad-except
         print('\nAn error occurred. Please check your connection, credentials and try again.\n')
         sys.exit(1)

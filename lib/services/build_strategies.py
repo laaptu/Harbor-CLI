@@ -23,11 +23,11 @@ def build_strategies():
 
 @requires_presence_of_file(
     paths['REACT_NATIVE_PACKAGE_JSON'],
-    lambda path: FILE_NOT_FOUND.format(path)
+    FILE_NOT_FOUND.format
 )
 @requires_presence_of_dir(
     paths['REACT_NATIVE_ANDROID_DIR'],
-    lambda path: DIR_NOT_FOUND.format(path)
+    DIR_NOT_FOUND.format
 )
 def strategy_react_native():
     '''

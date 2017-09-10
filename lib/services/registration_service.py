@@ -46,7 +46,7 @@ class RegistrationService(Anchor):
             sys.exit(1)
 
         try:
-            self.find_icons()
+            find_icons()
             icon_path = Firebase().upload(package_json_name + '/icon.png', paths['ICONS_XXHDPI'])
         except FileNotFoundException:
             icon_path = None
@@ -58,13 +58,13 @@ class RegistrationService(Anchor):
                            iconUrl=icon_path
                           )
 
-    @requires_presence_of_file(
-        paths['ICONS_XXHDPI'],
-        lambda path: 'Cannot find icons in path {0}. Skipping..'.format(path)
-    )
-    def find_icons(self):
-        '''
-        Return which icon sets were found
-        Currently only returns True, and icon is hardcoded to xxhdpi
-        '''
-        return True
+@requires_presence_of_file(
+    paths['ICONS_XXHDPI'],
+    'Cannot find icons in path {0}. Skipping..'.format
+)
+def find_icons():
+    '''
+    Return which icon sets were found
+    Currently only returns True, and icon is hardcoded to xxhdpi
+    '''
+    return True
