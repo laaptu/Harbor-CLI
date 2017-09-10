@@ -3,7 +3,6 @@ import sys
 
 from lib.services import deploy_service, registration_service, invitation_service
 from lib.services.firebase_service import Firebase
-from lib.services.builder_service import builder
 from lib.constants.release_types import ReleaseTypes
 from lib.utils.validators import is_valid_email
 
@@ -33,12 +32,7 @@ def deploy(type):
         print('"{0}" is not a valid release type. Please use "uat", "qa" or "dev".'.format(type))
         sys.exit(1)
 
-    deploy_service.DeployService(
-        type,
-        Firebase(),
-        Firebase(),
-        builder()()
-    ).delegate()
+    deploy_service.DeployService(type).delegate()
 
 
 @click.command()

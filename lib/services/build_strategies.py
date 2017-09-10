@@ -29,7 +29,7 @@ def strategy_react_native():
   build_details = gradle.build_react_native()
 
   if  build_details['returncode'] == 0:
-      print('\nBuild successful. APK is %s.' % ('signed' if build_details['isSigned'] else 'not signed\n'))
+      print('\nBuild successful. APK is %s.' % ('signed' if build_details['isSigned'] else 'not signed'))
 
       project_data = json_parse(paths['REACT_NATIVE_PACKAGE_JSON'])
 
