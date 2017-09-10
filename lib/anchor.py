@@ -12,7 +12,7 @@ class Anchor():
                 self.apply_plugins(n, args, kwargs)
             return
 
-        if not self._plugins[event]:
+        if event not in self._plugins:
             return
         plugins = self._plugins[event]
         for plugin in plugins:
