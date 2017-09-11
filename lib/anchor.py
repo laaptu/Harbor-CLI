@@ -9,11 +9,9 @@ class Anchor():
     Plugins would generally receive a single arg - "compilation"
     Very similar to webpack's tapable. (https://github.com/webpack/tapable)
     '''
-
     def __init__(self):
         ''' Initialize our plugin pool. '''
         self._plugins = {}
-
 
     def apply_plugins(self, event, *args, **kwargs):
         ''' Apply plugins registered for a event. '''
@@ -28,7 +26,6 @@ class Anchor():
         for plugin in plugins:
             plugin(*args, **kwargs)
 
-
     def has_plugins(self, event):
         ''' Check if any plugins are registered to a event. '''
         if event not in self._plugins:
@@ -36,7 +33,6 @@ class Anchor():
         plugins = self._plugins[event]
 
         return len(plugins)
-
 
     def plugin(self, event, callback_function):
         ''' Register a plugin under a event. '''
@@ -48,7 +44,6 @@ class Anchor():
             self._plugins[event] = [callback_function]
         else:
             self._plugins[event].append(callback_function)
-
 
     def apply(self, *args):
         ''' Attaches the plugins to the instance. '''

@@ -33,7 +33,6 @@ class FirebasePlugin(Anchor):
         compiler.plugin('deploy_project', self.deploy_project)
         compiler.plugin('register_project', self.register_project)
 
-
     def register_user(self, **kwargs):
         ''' Register a single user. '''
         def handle_error(error):
@@ -55,7 +54,6 @@ class FirebasePlugin(Anchor):
             sys.exit(0)
         except Exception as error:
             handle_error(error)
-
 
     def register_project(self, **kwargs):
         '''
