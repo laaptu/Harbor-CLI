@@ -2,16 +2,24 @@ import os
 import xml.etree.ElementTree as ET
 from subprocess import Popen, PIPE
 
-from lib.constants.paths import paths
+from lib.constants.paths import PATHS
 from lib.utils.decorators import requires_presence_of_file
+
+MANIFEST_NOT_FOUND = 'Could not find AndroidManifest.xml file\
+        please make sure you  are in  the root of a valid React Native project'
+
 
 def build_react_native():
     '''
     Builds a React Native project using gradle cli.
     Availability of the command is assumed.
     '''
-    with Popen( ['./android/gradlew', '-p', 'android', 'assembleRelease'], bufsize=-1, stdout=PIPE, stderr=PIPE,
-               universal_newlines=True) as process:
+    with Popen(['./android/gradlew', '-p', 'android', 'assembleRelease'],
+               bufsize=-1,
+               stdout=PIPE,
+               stderr=PIPE,
+               universal_newlines=True
+              ) as process:
         for line in process.stderr:
             print(line)
 
@@ -35,12 +43,12 @@ def build_react_native():
 
 
 @requires_presence_of_file(
-    paths['REACT_NATIVE_MANIFEST'],
-    lambda path: 'Could not find AndroidManifest.xml file, please make sure you  are in  the root of a valid React Native project'
+    PATHS['REACT_NATIVE_MANIFEST'],
+    lambda *args: MANIFEST_NOT_FOUND
 )
 def get_react_native_project_name():
     ''' Returns the project name by extracting it from the AndroidManifest.xml file.'''
-    android_manifest_tree = ET.parse(paths['REACT_NATIVE_MANIFEST'])
+    android_manifest_tree = ET.parse(PATHS['REACT_NATIVE_MANIFEST'])
     manifest_element = android_manifest_tree.getroot()
 
     return manifest_element.attrib['package']

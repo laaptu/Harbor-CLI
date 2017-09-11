@@ -1,10 +1,27 @@
+'''
+Firebase plugin module.
+Writes to db/storage done from here
+'''
 import sys
 
 from lib.anchor import Anchor
 from lib.utils.destructure import destructure
 from lib.services.firebase_service import Firebase
+from lib.utils.gradle import get_react_native_project_name
+from lib.exceptions.FileNotFound import FileNotFoundException
+
+EMAIL_EXISTS_ERROR_MESSAGE = 'An error occurred.\
+        Please check your connection, credentials and try again.\n'
+EXISTING_PACKAGE_ERROR = 'This package name is already registered.\
+        If you want to update your details, please use the "--resync" flag\
+        with admin credentials.'
 
 class FirebasePlugin(Anchor):
+    '''
+    Handles firebase parts of any process.
+    Generally, services will apply plugins which in turn apply their own.
+    This is called somewhere down the tree.
+    '''
 
     def __init__(self):
         super().__init__()
@@ -16,15 +33,18 @@ class FirebasePlugin(Anchor):
         compiler.plugin('deploy_project', self.deploy_project)
         compiler.plugin('register_project', self.register_project)
 
-
     def register_user(self, **kwargs):
         ''' Register a single user. '''
-        def handle_error(e):
-            error = eval(e.args[1])
+        def handle_error(error):
+            '''
+            Handle error when creating a user.
+            The check we are interested in is EMAIL_EXISTS.
+            '''
+            error = eval(error.args[1])
             if error['error']['message'] == 'EMAIL_EXISTS':
                 print('\nThis email has already been registered. Please try another one.')
             else:
-                print('\nAn error occurred. Please check your connection, credentials and try again.\n')
+                print(EMAIL_EXISTS_ERROR_MESSAGE)
             sys.exit(1)
 
         email, password = destructure(kwargs)('email', 'password')
@@ -32,9 +52,8 @@ class FirebasePlugin(Anchor):
             Firebase().signup_via_email(email, password)
             print('\nSigned up successfully.\n')
             sys.exit(0)
-        except Exception as e:
-            handle_error(e)
-
+        except Exception as error:
+            handle_error(error)
 
     def register_project(self, **kwargs):
         '''
@@ -43,32 +62,36 @@ class FirebasePlugin(Anchor):
         Registers the current user as an admin.
         '''
         def project_output_path(proj_name):
+            ''' Returns the database path  for projects. '''
             return ''.join(proj_name.split('.'))
 
         def members_output_path(user):
-            return user['uid']
+            ''' Returns the database path for members. '''
+            return 'members/' + user['uid']
 
-        name, package_name, iconUrl = destructure(kwargs)('name', 'package_name', 'iconUrl')
-        existing  = Firebase().get_from_db('projects/' + project_output_path(package_name))
+        name, package_name, icon_url = destructure(kwargs)('name', 'package_name', 'iconUrl')
+        existing = Firebase().get_from_db('projects/' + project_output_path(package_name))
         if existing.val() is not None:
-            print('This package name is already registered. If you want to update your details, please use the "--resync" flag with admin credentials.')
+            print(EXISTING_PACKAGE_ERROR)
             sys.exit(1)
         project_data = {
             'name': name,
             'uploads': {},
-            'iconUrl': iconUrl,
+            'iconUrl': icon_url,
             'packageName': package_name,
         }
         member_admin_data = {
             'role': 'admin',
             'notificationLevel': 'all'
-        };
+        }
         Firebase().write_to_db(
             'projects/' + project_output_path(package_name),
             project_data
         )
         Firebase().write_to_db(
-            'members/' + members_output_path(Firebase().get_current_user_details()) + '/' + project_output_path(package_name),
+            members_output_path(Firebase().get_current_user_details()) +
+            '/' +
+            project_output_path(package_name),
             member_admin_data,
             update=True
         )
@@ -80,12 +103,19 @@ class FirebasePlugin(Anchor):
         Add an entry to members/{uid}/{packageName}.
         '''
         def proj_path(proj_name):
+            ''' Database path for projects. '''
             return ''.join(proj_name.split('.'))
 
         def members_output_path(user, proj_name):
+            ''' Database path for members. '''
             return 'members/' + user['uid'] + '/' + proj_path(proj_name)
 
-        target_email, role, project_name = destructure(kwargs)('email', 'role', 'project_name')
+        target_email, role = destructure(kwargs)('email', 'role')
+        try:
+            project_name = get_react_native_project_name()
+        except FileNotFoundException as error:
+            print(error.message)
+            sys.exit(1)
 
         existing = Firebase().get_from_db('projects/' + proj_path(project_name))
         if existing.val() is None:
@@ -106,21 +136,25 @@ class FirebasePlugin(Anchor):
 
 
     def deploy_project(self, **kwargs):
+        ''' Firebase plugin hook for deploying a project. '''
         def timestamp():
+            ''' Returns current timestamp. '''
             from datetime import datetime
             import calendar
-            d = datetime.utcnow()
-            return str(calendar.timegm(d.utctimetuple()))
+            now = datetime.utcnow()
+            return str(calendar.timegm(now.utctimetuple()))
 
         def storage_path(build_details, timestamp):
+            ''' Returns storage path for APK. '''
             name = build_details['metainf']['name']
             return name + '/' + name + '_' +  timestamp + '.apk'
 
         def project_path(package_name, timestamp):
-            ''' Returns the database  path for new uploads to a project. '''
+            ''' Returns the database path for new uploads to a project. '''
             return 'projects' + '/' + ''.join(package_name.split('.')) + '/uploads/' + timestamp
 
         def metadata_path(package_name):
+            ''' Returns the database path for metadata. '''
             return 'projects' + '/' + ''.join(package_name.split('.')) + '/metadata'
 
         now = timestamp()
