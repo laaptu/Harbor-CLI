@@ -23,7 +23,7 @@ class DeployService(Anchor):
     def delegate(self):
         ''' Public method used as the CLI hook. '''
         build_details = self.builder.build()
-        login_with_email(Firebase())
+        login_with_email(Firebase().login_with_email)
         self.apply_plugins('deploy_project',
                            build_details=build_details,
                            release_type=self.release_type

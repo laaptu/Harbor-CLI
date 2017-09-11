@@ -22,5 +22,5 @@ class InvitationService(Anchor):
 
     def delegate(self):
         ''' Public method used as the CLI hook. '''
-        login_with_email(Firebase())
+        login_with_email(Firebase().login_with_email)
         self.apply_plugins('add_user', email=self.target_email, role=self.role)

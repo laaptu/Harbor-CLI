@@ -31,7 +31,7 @@ class RegistrationService(Anchor):
             email, password = get_login_credentials()
             self.apply_plugins('register_user', email=email, password=password)
 
-        login_with_email(Firebase())
+        login_with_email(Firebase().login_with_email)
         self.__register_project__()
 
     def __register_project__(self):

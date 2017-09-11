@@ -110,7 +110,7 @@ class FirebasePlugin(Anchor):
             ''' Database path for members. '''
             return 'members/' + user['uid'] + '/' + proj_path(proj_name)
 
-        target_email, role, = destructure(kwargs)('email', 'role')
+        target_email, role = destructure(kwargs)('email', 'role')
         try:
             project_name = get_react_native_project_name()
         except FileNotFoundException as error:
