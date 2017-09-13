@@ -206,11 +206,5 @@ class FirebasePlugin(Anchor):
             metadata_path(package_name),
             metadata
         )
-        self.apply_plugins('deploy/did_deploy', {
-            'url': url,
-            'user':user,
-            'metdata': metadata,
-            'release_type': release_type,
-            'build_details': build_details,
-        })
+        self.apply_plugins('deploy/did_deploy', compilation)
         print('\nUpload successful. APK was deployed.')
