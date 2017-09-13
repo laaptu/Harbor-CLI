@@ -17,7 +17,7 @@ class Anchor():
         ''' Apply plugins registered for a event. '''
         if isinstance(event, list):
             for name in event:
-                self.apply_plugins(name, args, kwargs)
+                self.apply_plugins(name, *args, **kwargs)
             return
 
         if event not in self._plugins:
