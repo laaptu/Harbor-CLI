@@ -2,9 +2,18 @@
 Helpers for standard I/O work.
 '''
 import sys
+import click
 import getpass
 
+from lib.utils import git
 from lib.utils.validators import is_valid_email
+
+RELEASE_LOG_TEXT = '''
+# Please enter a change log for this release. Everything below this line is ignored, and an
+# empty message aborts the release.
+
+# On branch {0}
+'''
 
 def get_login_credentials():
     ''' Get login creds from user. Also includes some validation. '''
@@ -27,4 +36,16 @@ def login_with_email(login):
         print('\nAn error occurred. Please check your connection, credentials and try again.\n')
         sys.exit(1)
 
+def get_changelog():
+    '''
+    Opens up EDITOR, and allows user to enter changelog.
+    Splits by the boilerplate text and returns user input
+    '''
+    current_branch = git.branch()
+    data = click.edit(
+        text=RELEASE_LOG_TEXT.format(current_branch),
+        require_save=True
+    )
+    serialized = data.split(RELEASE_LOG_TEXT.format(current_branch))
 
+    return serialized[0]
