@@ -15,7 +15,7 @@ class HipChatPlugin():
     def __init__(self):
         self.hipchat_url = "https://{0}.hipchat.com/v2/room/{1}/notification?auth_token={2}"
         self.deploying_message = "{0} is deploying a {1} build from branch {2}."
-        self.deployed_message = "{0} deployed a {1} {2} from branch {3}. See the changelog {4}."
+        self.deployed_message = "{0} deployed a {1} {2} from branch {3}."
 
     def apply(self, compiler):
         ''' Register plugins. '''
