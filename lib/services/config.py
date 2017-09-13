@@ -26,8 +26,6 @@ def is_hipchat_configured():
     if not exists():
         return False
     options = get()
-    print('Got options: ', options)
     if 'hipchat' not in options:
         return False
     return True
-
