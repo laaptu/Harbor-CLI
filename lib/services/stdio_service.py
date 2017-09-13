@@ -2,8 +2,8 @@
 Helpers for standard I/O work.
 '''
 import sys
-import click
 import getpass
+import click
 
 from lib.utils import git
 from lib.utils.validators import is_valid_email
