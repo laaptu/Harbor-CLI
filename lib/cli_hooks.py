@@ -17,6 +17,9 @@ INVALID_ROLE = 'Role {0} is not valid. Please use one of ["qa", "uat", "dev"] '
 INVALID_DEPLOY_TYPE = 'Please use "uat", "qa" or "dev" as the deploy type'
 INVALID_EMAIL = '"{0}" is not a valid email.'
 
+
+click.clear()
+
 @click.group()
 def cli():
     ''' CLI for the Harbor application. '''
