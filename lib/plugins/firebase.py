@@ -5,6 +5,7 @@ Writes to db/storage done from here
 import sys
 
 from lib.anchor import Anchor
+from lib.plugins.hipchat import HipChatPlugin
 from lib.utils.destructure import destructure
 from lib.services.firebase_service import Firebase
 from lib.utils.gradle import get_react_native_project_name
@@ -25,7 +26,7 @@ class FirebasePlugin(Anchor):
 
     def __init__(self):
         super().__init__()
-        super().apply()
+        super().apply(HipChatPlugin())
 
     def apply(self, compiler):
         compiler.plugin('register_user', self.register_user)
