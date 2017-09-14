@@ -35,6 +35,7 @@ def strategy_react_native():
     Build strategy for react_native projects.
     '''
     print('Building the project. Please be patient... ')
+    gradle.clean_project()
     build_details = gradle.build_react_native()
 
     if build_details['returncode'] == 0:

@@ -52,3 +52,19 @@ def get_react_native_project_name():
     manifest_element = android_manifest_tree.getroot()
 
     return manifest_element.attrib['package']
+
+
+def clean_project():
+    '''
+    Clean project.
+    '''
+    print('Cleaning project.')
+    with Popen(['./android/gradlew', '-p', 'android', 'clean'],
+               bufsize=-1,
+               stdout=PIPE,
+               stderr=PIPE,
+               universal_newlines=True
+              ) as process:
+        for line in process.stderr:
+            print(line)
+
