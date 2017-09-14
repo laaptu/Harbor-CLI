@@ -78,25 +78,33 @@ function onProjectRelease(event) {
 
               let fcmTokensForUser = Object.keys(userDetails.fcmTokens);
 
-              const payload = {
-                notification: {
-                  title: `A new ship has arrived!`,
-                  body: `A new update for ${project_id} is available.`,
-                }
-              };
+              admin.database()
+                .ref(`/projects/${project_id}`)
+                .once('value', function(projectDetails) {
+                  const projectName = projectDetails.val().name;
+                  console.log('ProjectName = ', projectName);
 
-              for (let token of fcmTokensForUser) {
-                admin.messaging().sendToDevice(token, payload)
-                  .then(function(response) {
-                    // See the MessagingDevicesResponse reference documentation for
-                    // the contents of response.
-                    console.log("Successfully sent message:", response);
-                  })
-                  .catch(function(error) {
-                    console.log("Error sending message:", error);
-                  });
-              }
 
+                  const payload = {
+                    notification: {
+                      title: `Update Available`,
+                      body: `A new update for ${projectName} is available.`,
+                      sound: 'default'
+                    }
+                  };
+
+                  for (let token of fcmTokensForUser) {
+                    admin.messaging().sendToDevice(token, payload)
+                      .then(function(response) {
+                        // See the MessagingDevicesResponse reference documentation for
+                        // the contents of response.
+                        console.log("Successfully sent message:", response);
+                      })
+                      .catch(function(error) {
+                        console.log("Error sending message:", error);
+                      });
+                  }
+                });
             });
           });
       }
