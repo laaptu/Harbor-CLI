@@ -177,9 +177,9 @@ class FirebasePlugin(Anchor):
         )
         upload_data = {
             'branch': branch,
+            'releasedBy': user,
             'download_url': url,
             'changelog': changelog,
-            'releasedBy': user['uid'],
             'releaseType': release_type,
         }
         metadata = {
