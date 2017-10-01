@@ -1,6 +1,8 @@
 ''' All CLI hooks are handled through here. '''
 import sys
 import click
+from pyfiglet import Figlet
+
 
 from lib.utils.validators import is_valid_email
 from lib.constants.release_types import ReleaseTypes
@@ -17,8 +19,9 @@ INVALID_ROLE = 'Role {0} is not valid. Please use one of ["qa", "uat", "dev"] '
 INVALID_DEPLOY_TYPE = 'Please use "uat", "qa" or "dev" as the deploy type'
 INVALID_EMAIL = '"{0}" is not a valid email.'
 
-
 click.clear()
+print(Figlet(font='slant').renderText('HARBOR'))
+
 
 @click.group()
 def cli():

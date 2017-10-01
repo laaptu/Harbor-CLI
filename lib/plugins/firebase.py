@@ -3,6 +3,7 @@ Firebase plugin module.
 Writes to db/storage done from here
 '''
 import sys
+from pyspin.spin import make_spin, Default
 
 from lib.anchor import Anchor
 from lib.plugins.hipchat import HipChatPlugin
@@ -10,6 +11,7 @@ from lib.utils.destructure import destructure
 from lib.services.firebase_service import Firebase
 from lib.utils.gradle import get_react_native_project_name
 from lib.exceptions.FileNotFound import FileNotFoundException
+from lib.utils.colorprinter import colorprint, print_with_spinner
 
 EMAIL_EXISTS_ERROR_MESSAGE = 'An error occurred.\
         Please check your connection, credentials and try again.\n'
@@ -43,15 +45,15 @@ class FirebasePlugin(Anchor):
             '''
             error = eval(error.args[1])
             if error['error']['message'] == 'EMAIL_EXISTS':
-                print('\nThis email has already been registered. Please try another one.')
+                colorprint('RED')('\nThis email has already been registered. Please try another one.')
             else:
-                print(EMAIL_EXISTS_ERROR_MESSAGE)
+                colorprint('RED')(EMAIL_EXISTS_ERROR_MESSAGE)
             sys.exit(1)
 
         email, password = destructure(kwargs)('email', 'password')
         try:
             Firebase().signup_via_email(email, password)
-            print('\nSigned up successfully.\n')
+            colorprint('GREEN')('\nSigned up successfully.\n')
             sys.exit(0)
         except Exception as error:
             handle_error(error)
@@ -73,7 +75,7 @@ class FirebasePlugin(Anchor):
         name, package_name, icon_url = destructure(kwargs)('name', 'package_name', 'iconUrl')
         existing = Firebase().get_from_db('projects/' + project_output_path(package_name))
         if existing.val() is not None:
-            print(EXISTING_PACKAGE_ERROR)
+            colorprint('RED')(EXISTING_PACKAGE_ERROR)
             sys.exit(1)
         project_data = {
             'name': name,
@@ -96,7 +98,7 @@ class FirebasePlugin(Anchor):
             member_admin_data,
             update=True
         )
-        print('Successfully registered.')
+        colorprint('GREEN')('Successfully registered.')
 
 
     def add_user_to_project(self, **kwargs):
@@ -115,12 +117,12 @@ class FirebasePlugin(Anchor):
         try:
             project_name = get_react_native_project_name()
         except FileNotFoundException as error:
-            print(error.message)
+            colorprint('RED')(error.message)
             sys.exit(1)
 
         existing = Firebase().get_from_db('projects/' + proj_path(project_name))
         if existing.val() is None:
-            print('The project does not exist.')
+            colorprint('RED')('The project does not exist.')
             sys.exit(1)
 
         user = Firebase().get_details_for_user_by_email(target_email)()
@@ -133,9 +135,10 @@ class FirebasePlugin(Anchor):
             data,
             update=True
         )
-        print('Invited "{0}" to "{1}" as "{2}"'.format(target_email, project_name, role))
+        colorprint('GREEN')('Invited "{0}" to "{1}" as "{2}"'.format(target_email, project_name, role))
 
 
+    @print_with_spinner('GREEN', 'Deploying project.. Please be patient..')
     def deploy_project(self, **kwargs):
         ''' Firebase plugin hook for deploying a project. '''
         def timestamp():
@@ -163,7 +166,6 @@ class FirebasePlugin(Anchor):
             'build_details', 'release_type', 'changelog', 'branch'
         )
         user = Firebase().get_current_user_details()
-        print('\nUploading %s...' % (build_details['apk_path']))
         self.apply_plugins(['deploy/will_upload', 'deploy/will_deploy'], {
             'user': user,
             'branch': branch,
@@ -207,4 +209,4 @@ class FirebasePlugin(Anchor):
             metadata
         )
         self.apply_plugins('deploy/did_deploy', compilation)
-        print('\nUpload successful. APK was deployed.')
+        colorprint('GREEN')('\nUpload successful. APK was deployed.')

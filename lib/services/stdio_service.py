@@ -7,6 +7,7 @@ import click
 
 from lib.utils import git
 from lib.utils.validators import is_valid_email
+from lib.utils.colorprinter import colorprint
 
 RELEASE_LOG_TEXT = '''
 # Please enter a change log for this release. Everything below this line is ignored, and an
@@ -15,13 +16,18 @@ RELEASE_LOG_TEXT = '''
 # On branch {0}
 '''
 
+ASK_EMAIL = 'Enter your email address: '
+INVALID_EMAIL = 'You entered an invalid email.'
+LOGIN_SUCCESS = '[✓] Logged in successfully.'
+LOGIN_FAILURE = '\n[✘] An error occurred. Please check your connection, credentials and try again.\n'
+
 def get_login_credentials():
     ''' Get login creds from user. Also includes some validation. '''
     while True:
-        email = input('Enter your email address: ')
+        email = input(ASK_EMAIL)
         if is_valid_email(email):
             break
-        print('You entered an invalid email address.')
+        colorprint('RED')(INVALID_EMAIL)
 
     password = getpass.getpass()
     return (email, password)
@@ -31,9 +37,9 @@ def login_with_email(login):
     email, password = get_login_credentials()
     try:
         login(email, password)
-        print('\nLogged in successfully.\n')
+        colorprint('GREEN')(LOGIN_SUCCESS)
     except Exception:  #pylint: disable=broad-except
-        print('\nAn error occurred. Please check your connection, credentials and try again.\n')
+        colorprint('RED')(LOGIN_FAILURE)
         sys.exit(1)
 
 def get_changelog():
@@ -42,10 +48,13 @@ def get_changelog():
     Splits by the boilerplate text and returns user input
     '''
     current_branch = git.branch()
+
     data = click.edit(
         text=RELEASE_LOG_TEXT.format(current_branch),
         require_save=True
     )
-    serialized = data.split(RELEASE_LOG_TEXT.format(current_branch))
-
-    return serialized[0]
+    try:
+        serialized = data.split(RELEASE_LOG_TEXT.format(current_branch))
+        return serialized[0]
+    except Exception: #pylint: disable=broad-except
+        return ''

@@ -12,6 +12,7 @@ from lib.utils.json_parser import json_parse
 from lib.exceptions.FileNotFound import FileNotFoundException
 from lib.plugins.firebase import FirebasePlugin
 from lib.utils.decorators import requires_presence_of_file
+from lib.utils.colorprinter import colorprint
 
 
 class RegistrationService(Anchor):
@@ -41,7 +42,7 @@ class RegistrationService(Anchor):
             package_json = json_parse('package.json')
             package_json_name = package_json['name']
         except FileNotFoundException as error:
-            print(error.message)
+            colorprint('RED')(error.message)
             sys.exit(1)
 
         try:

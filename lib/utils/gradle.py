@@ -20,8 +20,7 @@ def build_react_native():
                stderr=PIPE,
                universal_newlines=True
               ) as process:
-        for line in process.stderr:
-            print(line)
+        pass
 
     apk_signed_path = os.getcwd() + '/android/app/build/outputs/apk/app-release.apk'
     apk_unsigned_path = os.getcwd() + '/android/app/build/outputs/apk/app-release-unsigned.apk'
@@ -38,7 +37,8 @@ def build_react_native():
     return {
         'returncode': process.returncode,
         'isSigned': True if build_type == 'signed' else False,
-        'apk_path': apk_path
+        'apk_path': apk_path,
+        'size': os.path.getsize(apk_path)
     }
 
 
@@ -58,13 +58,12 @@ def clean_project():
     '''
     Clean project.
     '''
-    print('Cleaning project.')
     with Popen(['./android/gradlew', '-p', 'android', 'clean'],
                bufsize=-1,
                stdout=PIPE,
                stderr=PIPE,
                universal_newlines=True
               ) as process:
-        for line in process.stderr:
-            print(line)
+        pass
 
+    return process.returncode
