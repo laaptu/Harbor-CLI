@@ -42,6 +42,12 @@ def login_with_email(login):
         colorprint('RED')(LOGIN_FAILURE)
         sys.exit(1)
 
+def get_version():
+    ''' Get the version number for this release from user. '''
+    version = input('Enter a version number for this release: ')
+
+    return version
+
 def get_changelog():
     '''
     Opens up EDITOR, and allows user to enter changelog.

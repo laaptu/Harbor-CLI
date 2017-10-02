@@ -162,13 +162,14 @@ class FirebasePlugin(Anchor):
             return 'projects' + '/' + ''.join(package_name.split('.')) + '/metadata'
 
         now = timestamp()
-        build_details, release_type, changelog, branch = destructure(kwargs)(
-            'build_details', 'release_type', 'changelog', 'branch'
+        build_details, release_type, changelog, branch, version = destructure(kwargs)(
+            'build_details', 'release_type', 'changelog', 'branch', 'version'
         )
         user = Firebase().get_current_user_details()
         self.apply_plugins(['deploy/will_upload', 'deploy/will_deploy'], {
             'user': user,
             'branch': branch,
+            'version': version,
             'changelog': changelog,
             'release_type': release_type,
             'build_details': build_details,
@@ -179,19 +180,22 @@ class FirebasePlugin(Anchor):
         )
         upload_data = {
             'branch': branch,
+            'version': version,
             'releasedBy': user,
             'download_url': url,
             'changelog': changelog,
             'releaseType': release_type,
         }
         metadata = {
-            'lastReleasedBy': user,
             'lastReleasedOn': now,
+            'lastReleasedBy': user,
+            'currentVersion': version
         }
         compilation = {
             'url': url,
             'user':user,
             'branch': branch,
+            'version': version,
             'metadata': metadata,
             'changelog': changelog,
             'release_type': release_type,
