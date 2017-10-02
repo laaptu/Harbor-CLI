@@ -1,3 +1,9 @@
+'''
+Harbor allows for a configuration files called harborConfig.json
+usually for managing plugins supplied out of the box.
+This module has methods to parse the config file, and additional plugin
+specific helpers.
+'''
 import os
 
 from lib.constants.paths import PATHS

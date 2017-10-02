@@ -19,7 +19,9 @@ RELEASE_LOG_TEXT = '''
 ASK_EMAIL = 'Enter your email address: '
 INVALID_EMAIL = 'You entered an invalid email.'
 LOGIN_SUCCESS = '[✓] Logged in successfully.'
-LOGIN_FAILURE = '\n[✘] An error occurred. Please check your connection, credentials and try again.\n'
+LOGIN_FAILURE = ''' n[✘] An error occurred.
+Please check your connection, credentials and try again.\n
+'''
 
 def get_login_credentials():
     ''' Get login creds from user. Also includes some validation. '''

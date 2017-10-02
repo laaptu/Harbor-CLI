@@ -1,8 +1,6 @@
 '''
 Strategy for building different project types.
 '''
-import sys
-
 from lib.utils import gradle
 from lib.constants.paths import PATHS
 from lib.utils.json_parser import json_parse
@@ -51,4 +49,3 @@ def strategy_react_native():
 
     else:
         raise Exception('Build clean/build failed.')
-
