@@ -39,6 +39,7 @@ class DeployService(Anchor):
                            version=version,
                            changelog=changelog,
                            branch=git.branch(),
+                           deployerName=git.whoami(),
                            build_details=build_details,
                            release_type=self.release_type
                           )

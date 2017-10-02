@@ -162,8 +162,8 @@ class FirebasePlugin(Anchor):
             return 'projects' + '/' + ''.join(package_name.split('.')) + '/metadata'
 
         now = timestamp()
-        build_details, release_type, changelog, branch, version = destructure(kwargs)(
-            'build_details', 'release_type', 'changelog', 'branch', 'version'
+        build_details, release_type, changelog, branch, version, deployer_name = destructure(kwargs)(
+            'build_details', 'release_type', 'changelog', 'branch', 'version', 'deployerName'
         )
         user = Firebase().get_current_user_details()
         self.apply_plugins(['deploy/will_upload', 'deploy/will_deploy'], {
@@ -172,6 +172,7 @@ class FirebasePlugin(Anchor):
             'version': version,
             'changelog': changelog,
             'release_type': release_type,
+            'deployerName': deployer_name,
             'build_details': build_details,
         })
         url = Firebase().upload(
@@ -185,11 +186,13 @@ class FirebasePlugin(Anchor):
             'download_url': url,
             'changelog': changelog,
             'releaseType': release_type,
+            'deployerName': deployer_name
         }
         metadata = {
             'lastReleasedOn': now,
             'lastReleasedBy': user,
-            'currentVersion': version
+            'currentVersion': version,
+            'deployerName': deployer_name
         }
         compilation = {
             'url': url,
@@ -199,6 +202,7 @@ class FirebasePlugin(Anchor):
             'metadata': metadata,
             'changelog': changelog,
             'release_type': release_type,
+            'deployerName': deployer_name,
             'build_details': build_details,
         }
         package_name = build_details['metainf']['package_name']
