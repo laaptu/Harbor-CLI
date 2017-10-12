@@ -16,7 +16,7 @@ _Python 2 is unsupported._
 You can install harbor with `pip`.
 
 ```
-pip install harbor
+pip install harbor-cli
 ```
 This makes available a `harbor` CLI command. You can run `harbor --help` to see supported commands or see below for usage instructions.
 
@@ -30,7 +30,7 @@ How does the deployment process for a React Native app look like?
     For example, a 'dev' release will be sent to only people invited under the 'dev' role.
 
 Harbor comes out of the box with limited support for [Hipchat](https://www.hipchat.com/sign_in) notifications. To configure this, you need a `harborConfig.json` config file in the root of your project. (Support for more
-messaging providers is planed!)
+messaging providers is planned!)
 
 ## Motivation
 Why did I create this?

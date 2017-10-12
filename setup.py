@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='harbor-cli',
     version='0.0.0.0',
-    description='CLI for the Harbor application.',
+    description='Harbor-CLI is a tool to share Android builds of React Native projects',
     py_modules=['main'],
     install_requires=[
         'Click',
