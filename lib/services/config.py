@@ -10,19 +10,19 @@ from lib.constants.paths import PATHS
 from lib.utils.json_parser import json_parse
 from lib.exceptions.FileNotFound import FileNotFoundException
 
-def get():
+def get(configpath=PATHS['CONFIG_PATH']):
     ''' Gets the config file details. '''
-    if not exists():
+    if not exists(configpath):
         raise FileNotFoundException(
-            PATHS['CONFIG_PATH'],
+            configpath,
             'Configuration file not found.'
         )
-    return json_parse(PATHS['CONFIG_PATH'])
+    return json_parse(configpath)
 
 
-def exists():
+def exists(configpath=PATHS['CONFIG_PATH']):
     ''' Returns a bool indicating whther the config file exists. '''
-    return os.path.isfile(PATHS['CONFIG_PATH'])
+    return os.path.isfile(configpath)
 
 
 def is_hipchat_configured():

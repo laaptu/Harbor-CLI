@@ -8,7 +8,11 @@ setup(
     install_requires=[
         'Click',
         'PyYaml',
-        'pyrebase'
+        'pyrebase',
+        'pyfiglet',
+        'pyspin',
+        'colorama',
+        'requests'
     ],
     entry_points={
         'console_scripts': ['harbor=lib.cli_hooks:cli']
