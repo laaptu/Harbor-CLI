@@ -1,14 +1,17 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='harbor-cli',
     version='0.0.0.0',
     description='Harbor-CLI is a tool to share Android builds of React Native projects',
-    py_modules=['main'],
+    packages=find_packages(exclude=['docs', 'tests*']),
     install_requires=[
         'Click',
         'PyYaml',
-        'pyrebase'
+        'pyrebase',
+        'pyfiglet',
+        'colorama',
+        'pyspin'
     ],
     entry_points={
         'console_scripts': ['harbor=lib.cli_hooks:cli']
