@@ -8,7 +8,7 @@ _(Note: This repo houses only the CLI for Harbor. The mobile app lives in a [dif
 
 ## Requirements
 * A linux or macOS/OSX system (Windows compatibility has never been checked and never will be)
-* Python 3.3, 3.4, 3.5 or 3.6 
+* Python 3.4, 3.5 or 3.6 
 
 _Python 2 is unsupported._
 
