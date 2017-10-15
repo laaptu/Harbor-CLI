@@ -15,7 +15,7 @@ setup(
         'requests'
     ],
     entry_points={
-        'console_scripts': ['harbor=lib.cli_hooks:cli']
+        'console_scripts': ['harbor=lib.cli:cli']
     },
     url='',
     author='Srishan Bhattarai',

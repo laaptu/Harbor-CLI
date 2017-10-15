@@ -2,7 +2,7 @@
 Tests that the CLI runs correctly.
 '''
 
-from lib.cli_hooks import cli
+from lib.cli import cli
 from click.testing import CliRunner
 
 DEPLOY_HELP = 'Deploy your project once it has been registered.'
