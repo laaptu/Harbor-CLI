@@ -46,7 +46,7 @@ def register(user):
 @click.command()
 @click.option('--deploy-type', help=DEPLOY_HELP_TEXT)
 def deploy(deploy_type):
-    ''' Deploy your project after registration. '''
+    ''' Deploy your project once it has been registered. '''
     Deploy(deploy_type).deploy()
 
 
