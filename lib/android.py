@@ -2,7 +2,9 @@
 Manage Android/ReactNative related actions through here.
 '''
 import os
+
 from lib.shell import run
+from lib.exceptions.InvalidAndroidProject import InvalidAndroidProjectException
 
 BASE_MANIFEST = '/app/src/main/AndroidManifest.xml'
 BASE_APK_PATH = '/app/build/outputs/apk/'
@@ -60,7 +62,7 @@ def build():
     elif is_native_android():
         return run('./android/gradlew assembleRelease')
     else:
-        raise Exception('Not an android project.')
+        raise InvalidAndroidProjectException()
 
 def clean():
     ''' Builds the android project. '''
@@ -69,7 +71,7 @@ def clean():
     elif is_native_android():
         return run('./android/gradlew clean')
     else:
-        raise Exception('Not an android project.')
+        raise InvalidAndroidProjectException()
 
 def signed(path):
     ''' If path matches signed path returns True, else returns False '''
@@ -79,7 +81,7 @@ def signed(path):
     if path == SIGNED_REACT_NATIVE_PATH or path == SIGNED_ANDROID_PATH:
         return True
 
-    raise Exception('Not an android project.')
+    raise InvalidAndroidProjectException()
 
 def apk_path():
     ''' Returns path to apk. '''
