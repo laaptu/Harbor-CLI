@@ -2,9 +2,10 @@
 Module to handle all inquiries that the CLI makes to the user.
 '''
 import click
-from inquirer import Text, Password, prompt
+from inquirer import Text, Password, Confirm, prompt
 
 from lib import git
+from lib.logger import logger
 from lib.utils.validators import is_valid_email
 
 
@@ -65,7 +66,18 @@ def getchangelog():
         require_save=True
     )
     try:
-        serialized = data.split(RELEASE_LOG_TEXT.format(branch))
+        serialized = data.split(RELEASE_LOG_TEXT.format(branch, user))
+
         return serialized[0]
     except Exception: #pylint: disable=broad-except
         return ''
+
+def getdeploymentconfirmation():
+    ''' Get confirmation (y/N) for deployment. '''
+    questions = [
+        Confirm('confirm', message='Confirm these details to begin deployment?')
+    ]
+
+    answers = prompt(questions)
+
+    return answers['confirm']
