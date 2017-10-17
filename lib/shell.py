@@ -13,3 +13,10 @@ def run(command):
     with Popen(argv, bufsize=1, stdout=PIPE, stderr=PIPE, universal_newlines=True) as process:
         out, err = process.communicate()
         return (process.returncode, out, err)
+
+
+def whoami():
+    ''' Returns the output of `whoami` UNIX command. '''
+    _, out, _ = run('whoami')
+
+    return out.rstrip()
