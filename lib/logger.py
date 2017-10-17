@@ -23,10 +23,7 @@ def init_logger():
     logtostdout.setLevel(logging.DEBUG)
 
     # Format for logs.
-    formatter = logging.Formatter(
-        '[%(asctime)s][%(name)s][%(levelname)s] - %(message)s',
-        datefmt='%m/%d/%Y %I:%M:%S %p'
-    )
+    formatter = logging.Formatter('[%(levelname)s] - %(message)s')
     logtostdout.setFormatter(formatter)
 
     # Add stdout log to main logger instance.
