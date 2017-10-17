@@ -104,7 +104,8 @@ def apk_path():
 
 def apk_size(path):
     ''' Returns size of apk. '''
-    return os.path.getsize(path)
+    # in megabytes.
+    return os.path.getsize(path) >> 20
 
 def build_details():
     ''' Returns the build details of the apks currently in output. '''
