@@ -7,6 +7,7 @@ from lib.android import (
     get_manifest_path,
     is_native_android,
     is_react_native,
+    PACKAGE_JSON,
     REACT_NATIVE_MANIFEST,
     NATIVE_ANDROID_MANIFEST,
 )
@@ -64,7 +65,7 @@ def test_isreactnative_v0():
     if not os.path.exists(path):
         os.makedirs(path)
 
-    with open(REACT_NATIVE_MANIFEST, 'w+'):
+    with open(REACT_NATIVE_MANIFEST, 'w+') as _, open(PACKAGE_JSON, 'w+') as _:
         assert is_react_native() is True
         assert is_native_android() is False
 

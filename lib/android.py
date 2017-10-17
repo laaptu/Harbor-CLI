@@ -18,6 +18,8 @@ UNSIGNED_REACT_NATIVE_PATH = ''.join([
     os.getcwd(), '/android', BASE_APK_PATH, 'app-release-unsigned.apk'
 ])
 
+PACKAGE_JSON = 'package.json'
+
 def is_android():
     ''' Returns true for any android project (native/RN) '''
     if is_native_android() or is_react_native():
@@ -46,7 +48,7 @@ def is_native_android():
 
 def is_react_native():
     ''' Returns True if the project in cwd is native android project. '''
-    if os.path.isfile(REACT_NATIVE_MANIFEST):
+    if os.path.isfile(REACT_NATIVE_MANIFEST) and os.path.isfile(PACKAGE_JSON):
         return True
 
     return False
