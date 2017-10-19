@@ -4,6 +4,7 @@ import click
 from pyfiglet import Figlet
 
 
+from lib import __version__
 from lib.utils.validators import is_valid_email
 from lib.constants.release_types import ReleaseTypes
 from lib.services import deploy_service, registration_service, invitation_service
@@ -23,6 +24,7 @@ click.clear()
 print(Figlet(font='slant').renderText('HARBOR'))
 
 
+@click.version_option(__version__, message='%(version)s')
 @click.group()
 def cli():
     ''' CLI for the Harbor application. '''
