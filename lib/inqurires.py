@@ -20,8 +20,9 @@ def getlogincredentials():
     questions = [
         Text(
             'email',
-            validate=lambda _, email: is_valid_email(email),
-            message='Enter your email address'
+            # validate=lambda _, email: is_valid_email(email),
+            message='Enter your email address',
+            default=git.email() or ''
         ),
 
         Password(
