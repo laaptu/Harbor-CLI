@@ -1,15 +1,13 @@
 ''' All CLI hooks are handled through here. '''
-import sys
 import click
 from pyfiglet import Figlet
 
 from lib import __version__
-from lib.logger import init_logger, logger
-from lib.utils.validators import is_valid_email
-from lib.constants.release_types import ReleaseTypes
-from lib.services import registration_service, invitation_service
+from lib.logger import init_logger
+from lib.services import registration_service
 
 from lib.commands.deploy import Deploy
+from lib.commands.invite import Invite
 
 REGISTER_HELP_TEXT = 'Flag to indicate if a user is to be registered.'
 DEPLOY_HELP_TEXT = 'Release type [qa, uat, dev].\
@@ -57,21 +55,7 @@ def deploy(deploy_type):
 @click.option('--role', help=INVITATION_HELP_TEXT)
 def invite(email, role):
     ''' Invite someone to the project. '''
-    def validate_role(role, accepted_values):
-        '''  Check if role is in list of accepted_values. '''
-        if role.lower() not in accepted_values:
-            logger().error(INVALID_ROLE.format(role))
-            sys.exit(1)
-
-    if role is None:
-        role = ReleaseTypes.DEV.value
-    validate_role(role, [release_type.value.lower() for release_type in ReleaseTypes])
-
-    if not is_valid_email(email):
-        logger().error(INVALID_EMAIL.format(email))
-        sys.exit(1)
-
-    invitation_service.InvitationService(role, email).delegate()
+    Invite(email, role).execute()
 
 
 cli.add_command(register)
