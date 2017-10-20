@@ -8,6 +8,7 @@ from lib.services import registration_service
 
 from lib.commands.deploy import Deploy
 from lib.commands.invite import Invite
+from lib.commands.register import Register
 
 REGISTER_HELP_TEXT = 'Flag to indicate if a user is to be registered.'
 DEPLOY_HELP_TEXT = 'Release type [qa, uat, dev].\
@@ -40,7 +41,7 @@ def cli():
 @click.option('--user', is_flag=True, help=REGISTER_HELP_TEXT)
 def register(user):
     ''' Register your project/user on the server. '''
-    registration_service.RegistrationService().delegate(True if user else False)
+    Register(user).execute()
 
 
 @click.command()
