@@ -87,10 +87,7 @@ class Invite(Anchor):
 
 def sanitize_role(role):
     ''' For unpermitted incoming deploy type, fallback to 'dev'.  '''
-    if role is None:
-        return 'dev'
-
-    if role.lower() not in ROLES:
+    if role is None or role.lower() not in ROLES:
         logger().warning('Unspecified or unpermitted role - Falling back to "dev"')
         return 'dev'
 

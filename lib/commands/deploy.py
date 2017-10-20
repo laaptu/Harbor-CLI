@@ -210,16 +210,12 @@ class Deploy(Anchor):
 
         print(table.table)
 
-def sanitize_deploy_type(incoming_deploy_type):
+def sanitize_deploy_type(type):
     ''' For unpermitted incoming deploy type, fallback to 'dev'.  '''
-    if incoming_deploy_type is None:
+    if type is None or type.lower() not in DEPLOY_TYPES:
         return 'dev'
 
-    if incoming_deploy_type.lower() not in DEPLOY_TYPES:
-        logger().warning('Unspecified or unpermitted deploy type - Falling back to "dev"')
-        return 'dev'
-
-    return incoming_deploy_type
+    return type
 
 def clean():
     ''' Clean the android project. '''
