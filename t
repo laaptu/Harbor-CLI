@@ -6,6 +6,11 @@ test() {
   python -m pytest
 }
 
+testw() {
+  echo "Running tests in watch mode"
+  ptw
+}
+
 changelog() {
   # NOTE: This requires github_changelog_generator to be installed.
   # https://github.com/skywinder/github-changelog-generator
