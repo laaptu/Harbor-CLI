@@ -1,6 +1,7 @@
 ''' Service for deploy command. '''
 import sys
 from terminaltables import SingleTable
+from requests import exceptions
 
 from lib import android, git
 from lib.shell import whoami
@@ -43,7 +44,12 @@ class Deploy(Anchor):
             sys.exit(1)
 
         email, password = getlogincredentials()
-        Firebase().login_with_email(email, password)
+
+        try:
+            Firebase().login_with_email(email, password)
+        except exceptions.HTTPError:
+            logger().error('Cannot login. Please verify credentials.')
+            sys.exit(1)
 
         self.version = getversionnumber()
 
