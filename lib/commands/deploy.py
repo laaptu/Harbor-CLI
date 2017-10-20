@@ -51,6 +51,12 @@ class Deploy(Anchor):
             logger().error('Cannot login. Please verify credentials.')
             sys.exit(1)
 
+        self.projectdetails = android.project_details()
+
+        if not self.is_registered():
+            logger().error('Project has not been registered. Please run `harbor register`.')
+            sys.exit(1)
+
         self.version = getversionnumber()
 
         self.changelog = getchangelog()
@@ -58,7 +64,6 @@ class Deploy(Anchor):
         clean()
         build()
 
-        self.projectdetails = android.project_details()
         self.builddetails = android.build_details()
 
         self.show_summary()
@@ -82,6 +87,17 @@ class Deploy(Anchor):
         logger().info('Running post-deploy hooks.')
         self.postdeployhooks()
         logger().info('Upload complete. Deployment successful.')
+
+    def is_registered(self):
+        ''' Returns True if the project is registered. '''
+        path = 'projects/{0}'
+        sanitizedpackagename = ''.join(self.projectdetails['packagename'].split('.'))
+
+        data = Firebase().get_from_db(
+            path.format(sanitizedpackagename)
+        )
+
+        return data.val() is not None
 
     def predeployhooks(self):
         ''' Run pre-deploy tasks. '''
@@ -196,6 +212,9 @@ class Deploy(Anchor):
 
 def sanitize_deploy_type(incoming_deploy_type):
     ''' For unpermitted incoming deploy type, fallback to 'dev'.  '''
+    if incoming_deploy_type is None:
+        return 'dev'
+
     if incoming_deploy_type.lower() not in DEPLOY_TYPES:
         logger().warning('Unspecified or unpermitted deploy type - Falling back to "dev"')
         return 'dev'
