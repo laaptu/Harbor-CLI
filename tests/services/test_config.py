@@ -7,12 +7,14 @@ import os
 import json
 import pytest
 
-from lib.services.config import get, exists, is_hipchat_configured
+from lib.services.config import get, exists
 from lib.exceptions.FileNotFound import FileNotFoundException
 
-def test_get_when_path_exists():
+def test_get_v0():
     ''' Should return the json for any path when it exists '''
-    testobj = { 'name': 'HarborCLI' }
+    testobj = {
+        'name': 'HarborCLI'
+    }
     with open('random.json', 'w') as jsonfile:
         json.dump(testobj, jsonfile)
 
@@ -20,7 +22,7 @@ def test_get_when_path_exists():
     assert data == testobj
     os.remove('random.json')
 
-def test_get_when_path_doesnt_exist():
+def test_get_v1():
     ''' Should throw when the config path does not exist '''
     with pytest.raises(FileNotFoundException):
         get('random.json')
@@ -31,10 +33,10 @@ def test_exists_when_config_exists():
         assert exists() is True
 
     if not os.path.isfile('harborConfig.json'):
-        with open('harborConfig.json', 'w') as config:
+        with open('harborConfig.json', 'w'):
             assert exists() is True
             os.remove('harborConfig.json')
 
-def test_exists_when_config_doesnt_exist():
+def test_exists_v0():
     ''' Should return false if file does not exist. '''
     assert exists('randomfile.json') is False

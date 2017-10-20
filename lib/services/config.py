@@ -6,6 +6,7 @@ specific helpers.
 '''
 import os
 
+from lib.logger import logger
 from lib.utils.json_parser import json_parse
 from lib.exceptions.FileNotFound import FileNotFoundException
 
@@ -35,4 +36,28 @@ def is_hipchat_configured():
     options = get()
     if 'hipchat' not in options:
         return False
+    return True
+
+def is_hipchat_config_valid():
+    ''' Checks if hipchat is correctly configured. '''
+    keys = ['company_name', 'room_id', 'auth_token']
+    error = 'HipChat configuration found, but keys {keys} are missing.'
+
+    if not is_hipchat_configured():
+        return False
+
+    config = get()
+    hipchat = config['hipchat']
+
+    missingkeys = []
+    for key in keys:
+        if key not in hipchat:
+            missingkeys.append(key)
+
+    if missingkeys:
+        keyerror = error.format(keys=missingkeys)
+        logger().error(keyerror)
+
+        return False
+
     return True
