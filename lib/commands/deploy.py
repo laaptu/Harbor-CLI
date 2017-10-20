@@ -37,6 +37,11 @@ class Deploy(Anchor):
 
     def deploy(self):
         ''' Deploy project. '''
+
+        if not android.is_android():
+            logger().error('You are not in a valid Android project.')
+            sys.exit(1)
+
         email, password = getlogincredentials()
         Firebase().login_with_email(email, password)
 
