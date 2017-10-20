@@ -52,14 +52,8 @@ def getchangelog():
     Opens up EDITOR, and allows user to enter changelog.
     Splits by the boilerplate text and returns user input
     '''
-    branch = git.branch()
-    user = git.username()
-
-    if not branch:
-        branch = '<unavailable>'
-
-    if not user:
-        user = '<unavailable>'
+    branch = git.branch() or '<unavailable>'
+    user = git.username() or '<unavailable>'
 
     data = click.edit(
         text=RELEASE_LOG_TEXT.format(branch, user),
