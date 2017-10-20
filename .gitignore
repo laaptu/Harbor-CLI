@@ -15,5 +15,7 @@ node_modules/
 
 build
 
+.tox/
+
 
 **/.DS_Store
