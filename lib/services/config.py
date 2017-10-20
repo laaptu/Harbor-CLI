@@ -6,11 +6,12 @@ specific helpers.
 '''
 import os
 
-from lib.constants.paths import PATHS
 from lib.utils.json_parser import json_parse
 from lib.exceptions.FileNotFound import FileNotFoundException
 
-def get(configpath=PATHS['CONFIG_PATH']):
+DEFAULT_CONFIG_PATH = os.getcwd() + '/harborConfig.json'
+
+def get(configpath=DEFAULT_CONFIG_PATH):
     ''' Gets the config file details. '''
     if not exists(configpath):
         raise FileNotFoundException(
@@ -20,7 +21,7 @@ def get(configpath=PATHS['CONFIG_PATH']):
     return json_parse(configpath)
 
 
-def exists(configpath=PATHS['CONFIG_PATH']):
+def exists(configpath=DEFAULT_CONFIG_PATH):
     ''' Returns a bool indicating whther the config file exists. '''
     return os.path.isfile(configpath)
 
