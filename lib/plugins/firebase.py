@@ -31,7 +31,6 @@ class FirebasePlugin(Anchor):
 
     def apply(self, compiler):
         compiler.plugin('register_user', self.register_user)
-        compiler.plugin('add_user', self.add_user_to_project)
         compiler.plugin('register_project', self.register_project)
 
     def register_user(self, **kwargs):
