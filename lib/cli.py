@@ -1,13 +1,13 @@
 ''' All CLI hooks are handled through here. '''
-import sys
 import click
 from pyfiglet import Figlet
 
-
 from lib import __version__
-from lib.utils.validators import is_valid_email
-from lib.constants.release_types import ReleaseTypes
-from lib.services import deploy_service, registration_service, invitation_service
+from lib.logger import init_logger
+
+from lib.commands.deploy import Deploy
+from lib.commands.invite import Invite
+from lib.commands.register import Register
 
 REGISTER_HELP_TEXT = 'Flag to indicate if a user is to be registered.'
 DEPLOY_HELP_TEXT = 'Release type [qa, uat, dev].\
@@ -20,9 +20,14 @@ INVALID_ROLE = 'Role {0} is not valid. Please use one of ["qa", "uat", "dev"] '
 INVALID_DEPLOY_TYPE = 'Please use "uat", "qa" or "dev" as the deploy type'
 INVALID_EMAIL = '"{0}" is not a valid email.'
 
+# Clear the screen.
 click.clear()
-print(Figlet(font='slant').renderText('HARBOR'))
 
+# Show a ASCII art on the screen.
+print(Figlet().renderText('HARBOR'))
+
+# Initalize logger.
+init_logger()
 
 @click.version_option(__version__, message='%(version)s')
 @click.group()
@@ -35,26 +40,14 @@ def cli():
 @click.option('--user', is_flag=True, help=REGISTER_HELP_TEXT)
 def register(user):
     ''' Register your project/user on the server. '''
-    registration_service.RegistrationService().delegate(True if user else False)
+    Register(user).execute()
 
 
 @click.command()
 @click.option('--deploy-type', help=DEPLOY_HELP_TEXT)
 def deploy(deploy_type):
     ''' Deploy your project once it has been registered. '''
-    def validate_deploy_type(deploy_type, accepted_values):
-        '''  Check if deploy_type is in list of accepted_values. '''
-        if deploy_type.lower() not in accepted_values:
-            print(INVALID_DEPLOY_TYPE)
-            sys.exit(1)
-
-    if deploy_type is None:
-        deploy_type = ReleaseTypes.DEV.value
-
-    validate_deploy_type(deploy_type,
-                         [release_type.value.lower() for release_type in ReleaseTypes]
-                        )
-    deploy_service.DeployService(deploy_type).delegate()
+    Deploy(deploy_type).execute()
 
 
 @click.command()
@@ -62,21 +55,7 @@ def deploy(deploy_type):
 @click.option('--role', help=INVITATION_HELP_TEXT)
 def invite(email, role):
     ''' Invite someone to the project. '''
-    def validate_role(role, accepted_values):
-        '''  Check if role is in list of accepted_values. '''
-        if role.lower() not in accepted_values:
-            print(INVALID_ROLE.format(role))
-            sys.exit(1)
-
-    if role is None:
-        role = ReleaseTypes.DEV.value
-    validate_role(role, [release_type.value.lower() for release_type in ReleaseTypes])
-
-    if not is_valid_email(email):
-        print(INVALID_EMAIL.format(email))
-        sys.exit(1)
-
-    invitation_service.InvitationService(role, email).delegate()
+    Invite(email, role).execute()
 
 
 cli.add_command(register)

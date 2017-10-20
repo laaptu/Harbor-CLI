@@ -2,14 +2,15 @@
 HipChat plugin.
 '''
 import requests
+
+from lib import git
 from lib.services import config
-from lib.utils import git
 from lib.utils.destructure import destructure
 
 
 class HipChatPlugin():
     '''
-    Must be a class with an apply method to be applied as a plugin.
+    HipChat Plugin. Only supports static messages for pre and post deploy lifecycle events.
     '''
 
     def __init__(self):
@@ -54,7 +55,7 @@ class HipChatPlugin():
         notification_data = {
             'color': 'red',
             'message': self.deploying_message.format(
-                git.whoami(), release_type, branch
+                git.username(), release_type.upper(), branch
             ),
             'notify': True,
             'message_format': "html"
@@ -70,10 +71,9 @@ class HipChatPlugin():
         notification_data = {
             'color': "green",
             'message': self.deployed_message.format(
-                git.whoami(), release_type, self.get_build_link(url), branch
+                git.username(), release_type.upper(), self.get_build_link(url), branch
             ),
             'notify': True,
             'message_format': "html"
         }
         self.notify(notification_data)
-

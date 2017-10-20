@@ -1,5 +1,4 @@
 from colorama import init, Fore, Style
-from pyspin.spin import make_spin, Spin4
 
 # Init colorama.
 init()
@@ -28,13 +27,3 @@ def colorprint(text_color, bail_result=False):
             return color + text
 
     return printer
-
-
-def print_with_spinner(color, text):
-    '''
-    A decorator to wrap any text preceding a function call
-    to a function call with spinner applied.
-    '''
-    with_spinner = make_spin(Spin4, colorprint(color, bail_result=True)(text))
-
-    return with_spinner

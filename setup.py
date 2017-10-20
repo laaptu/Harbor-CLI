@@ -7,15 +7,15 @@ setup(
     packages=find_packages(exclude=['docs', 'tests*']),
     install_requires=[
         'Click',
-        'PyYaml',
         'pyrebase',
         'pyfiglet',
         'colorama',
-        'pyspin',
-        'requests'
+        'requests',
+        'inquirer',
+        'terminaltables'
     ],
     entry_points={
-        'console_scripts': ['harbor=lib.cli_hooks:cli']
+        'console_scripts': ['harbor=lib.cli:cli']
     },
     url='',
     author='Srishan Bhattarai',
