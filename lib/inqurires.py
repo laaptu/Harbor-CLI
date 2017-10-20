@@ -5,7 +5,6 @@ import click
 from inquirer import Text, Password, Confirm, prompt
 
 from lib import git
-from lib.logger import logger
 from lib.utils.validators import is_valid_email
 
 
@@ -20,7 +19,7 @@ def getlogincredentials():
     questions = [
         Text(
             'email',
-            # validate=lambda _, email: is_valid_email(email),
+            validate=lambda _, email: is_valid_email(email),
             message='Enter your email address',
             default=git.email() or ''
         ),
@@ -76,7 +75,11 @@ def getchangelog():
 def getdeploymentconfirmation():
     ''' Get confirmation (y/N) for deployment. '''
     questions = [
-        Confirm('confirm', message='Confirm these details to begin deployment?')
+        Confirm(
+            'confirm',
+            message='Confirm these details to begin deployment?',
+            default=True
+        )
     ]
 
     answers = prompt(questions)
