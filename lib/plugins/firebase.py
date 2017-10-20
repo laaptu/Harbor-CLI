@@ -33,7 +33,6 @@ class FirebasePlugin(Anchor):
     def apply(self, compiler):
         compiler.plugin('register_user', self.register_user)
         compiler.plugin('add_user', self.add_user_to_project)
-        compiler.plugin('deploy_project', self.deploy_project)
         compiler.plugin('register_project', self.register_project)
 
     def register_user(self, **kwargs):
@@ -136,85 +135,3 @@ class FirebasePlugin(Anchor):
             update=True
         )
         colorprint('GREEN')('Invited "{0}" to "{1}" as "{2}"'.format(target_email, project_name, role))
-
-
-    @print_with_spinner('GREEN', 'Deploying project.. Please be patient..')
-    def deploy_project(self, **kwargs):
-        ''' Firebase plugin hook for deploying a project. '''
-        def timestamp():
-            ''' Returns current timestamp. '''
-            from datetime import datetime
-            import calendar
-            now = datetime.utcnow()
-            return str(calendar.timegm(now.utctimetuple()))
-
-        def storage_path(build_details, timestamp):
-            ''' Returns storage path for APK. '''
-            name = build_details['metainf']['name']
-            return name + '/' + name + '_' +  timestamp + '.apk'
-
-        def project_path(package_name, timestamp):
-            ''' Returns the database path for new uploads to a project. '''
-            return 'projects' + '/' + ''.join(package_name.split('.')) + '/uploads/' + timestamp
-
-        def metadata_path(package_name):
-            ''' Returns the database path for metadata. '''
-            return 'projects' + '/' + ''.join(package_name.split('.')) + '/metadata'
-
-        now = timestamp()
-        build_details, release_type, changelog, branch, version, deployer_name = destructure(kwargs)(
-            'build_details', 'release_type', 'changelog', 'branch', 'version', 'deployerName'
-        )
-        user = Firebase().get_current_user_details()
-        self.apply_plugins(['deploy/will_upload', 'deploy/will_deploy'], {
-            'user': user,
-            'branch': branch,
-            'version': version,
-            'changelog': changelog,
-            'release_type': release_type,
-            'deployerName': deployer_name,
-            'build_details': build_details,
-        })
-        url = Firebase().upload(
-            storage_path(build_details, now),
-            build_details['apk_path']
-        )
-        upload_data = {
-            'branch': branch,
-            'version': version,
-            'releasedBy': user,
-            'download_url': url,
-            'changelog': changelog,
-            'releaseType': release_type,
-            'deployerName': deployer_name
-        }
-        metadata = {
-            'lastReleasedOn': now,
-            'lastReleasedBy': user,
-            'currentVersion': version,
-            'deployerName': deployer_name
-        }
-        compilation = {
-            'url': url,
-            'user':user,
-            'branch': branch,
-            'version': version,
-            'metadata': metadata,
-            'changelog': changelog,
-            'release_type': release_type,
-            'deployerName': deployer_name,
-            'build_details': build_details,
-        }
-        package_name = build_details['metainf']['package_name']
-        self.apply_plugins('deploy/did_upload', compilation)
-        Firebase().write_to_db(
-            project_path(package_name, now),
-            upload_data,
-            update=True
-        )
-        Firebase().write_to_db(
-            metadata_path(package_name),
-            metadata
-        )
-        self.apply_plugins('deploy/did_deploy', compilation)
-        colorprint('GREEN')('\nUpload successful. APK was deployed.')
