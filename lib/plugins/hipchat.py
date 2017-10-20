@@ -9,7 +9,7 @@ from lib.utils.destructure import destructure
 
 class HipChatPlugin():
     '''
-    Must be a class with an apply method to be applied as a plugin.
+    HipChat Plugin. Only supports static messages for pre and post deploy lifecycle events.
     '''
 
     def __init__(self):

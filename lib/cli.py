@@ -3,6 +3,7 @@ import sys
 import click
 from pyfiglet import Figlet
 
+from lib import __version__
 from lib.logger import init_logger, logger
 from lib.utils.validators import is_valid_email
 from lib.constants.release_types import ReleaseTypes
@@ -30,6 +31,7 @@ print(Figlet().renderText('HARBOR'))
 # Initalize logger.
 init_logger()
 
+@click.version_option(__version__, message='%(version)s')
 @click.group()
 def cli():
     ''' CLI for the Harbor application. '''
