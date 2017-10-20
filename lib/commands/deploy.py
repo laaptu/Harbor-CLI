@@ -228,9 +228,11 @@ def clean():
         sys.exit(1)
 
     logger().info('Cleaning the project..')
-    clean_exitcode, _, _ = android.clean()
+    clean_exitcode, _, err = android.clean()
     if clean_exitcode is not 0:
-        logger().error('Clean failed. Please check that your project is valid. code = ')
+        logger().error(err)
+        logger().error('Clean failed. Please check that your project is valid')
+
         sys.exit(1)
 
     logger().info('Clean succesful.')
@@ -238,8 +240,9 @@ def clean():
 def build():
     ''' Build the android project. '''
     logger().info('Building the project..')
-    build_exitcode, _, _ = android.build()
+    build_exitcode, _, err = android.build()
     if build_exitcode is not 0:
+        logger().error(err)
         logger().error('Build failed. Please check that your project is valid.')
         sys.exit(1)
 
