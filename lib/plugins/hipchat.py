@@ -2,8 +2,9 @@
 HipChat plugin.
 '''
 import requests
+
+from lib import git
 from lib.services import config
-from lib.utils import git
 from lib.utils.destructure import destructure
 
 
@@ -54,7 +55,7 @@ class HipChatPlugin():
         notification_data = {
             'color': 'red',
             'message': self.deploying_message.format(
-                git.whoami(), release_type.upper(), branch
+                git.username(), release_type.upper(), branch
             ),
             'notify': True,
             'message_format': "html"
@@ -70,7 +71,7 @@ class HipChatPlugin():
         notification_data = {
             'color': "green",
             'message': self.deployed_message.format(
-                git.whoami(), release_type.upper(), self.get_build_link(url), branch
+                git.username(), release_type.upper(), self.get_build_link(url), branch
             ),
             'notify': True,
             'message_format': "html"

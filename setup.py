@@ -7,11 +7,9 @@ setup(
     packages=find_packages(exclude=['docs', 'tests*']),
     install_requires=[
         'Click',
-        'PyYaml',
         'pyrebase',
         'pyfiglet',
         'colorama',
-        'pyspin',
         'requests',
         'inquirer',
         'terminaltables'

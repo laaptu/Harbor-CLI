@@ -155,3 +155,14 @@ def project_details():
     details.update(packagejsondetails)
 
     return details
+
+def launcher_icon():
+    ''' Finds appropriate launcher icon for the project. '''
+
+    return find('ic_launcher.png', os.getcwd())
+
+def find(name, path):
+    ''' A helper to find a filename in a path. '''
+    for root, _, files in os.walk(path):
+        if name in files:
+            return os.path.join(root, name)

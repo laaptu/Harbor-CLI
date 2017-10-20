@@ -51,6 +51,12 @@ class Deploy(Anchor):
             logger().error('Cannot login. Please verify credentials.')
             sys.exit(1)
 
+        self.projectdetails = android.project_details()
+
+        if not self.is_registered():
+            logger().error('Project has not been registered. Please run `harbor register`.')
+            sys.exit(1)
+
         self.version = getversionnumber()
 
         self.changelog = getchangelog()
@@ -58,7 +64,6 @@ class Deploy(Anchor):
         clean()
         build()
 
-        self.projectdetails = android.project_details()
         self.builddetails = android.build_details()
 
         self.show_summary()
@@ -82,6 +87,17 @@ class Deploy(Anchor):
         logger().info('Running post-deploy hooks.')
         self.postdeployhooks()
         logger().info('Upload complete. Deployment successful.')
+
+    def is_registered(self):
+        ''' Returns True if the project is registered. '''
+        path = 'projects/{0}'
+        sanitizedpackagename = ''.join(self.projectdetails['packagename'].split('.'))
+
+        data = Firebase().get_from_db(
+            path.format(sanitizedpackagename)
+        )
+
+        return data.val() is not None
 
     def predeployhooks(self):
         ''' Run pre-deploy tasks. '''
@@ -194,13 +210,12 @@ class Deploy(Anchor):
 
         print(table.table)
 
-def sanitize_deploy_type(incoming_deploy_type):
+def sanitize_deploy_type(type):
     ''' For unpermitted incoming deploy type, fallback to 'dev'.  '''
-    if incoming_deploy_type.lower() not in DEPLOY_TYPES:
-        logger().warning('Unspecified or unpermitted deploy type - Falling back to "dev"')
+    if type is None or type.lower() not in DEPLOY_TYPES:
         return 'dev'
 
-    return incoming_deploy_type
+    return type
 
 def clean():
     ''' Clean the android project. '''
@@ -209,9 +224,11 @@ def clean():
         sys.exit(1)
 
     logger().info('Cleaning the project..')
-    clean_exitcode, _, _ = android.clean()
+    clean_exitcode, _, err = android.clean()
     if clean_exitcode is not 0:
-        logger().error('Clean failed. Please check that your project is valid. code = ')
+        logger().error(err)
+        logger().error('Clean failed. Please check that your project is valid')
+
         sys.exit(1)
 
     logger().info('Clean succesful.')
@@ -219,8 +236,9 @@ def clean():
 def build():
     ''' Build the android project. '''
     logger().info('Building the project..')
-    build_exitcode, _, _ = android.build()
+    build_exitcode, _, err = android.build()
     if build_exitcode is not 0:
+        logger().error(err)
         logger().error('Build failed. Please check that your project is valid.')
         sys.exit(1)
 
