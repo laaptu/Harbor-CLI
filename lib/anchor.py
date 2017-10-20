@@ -1,5 +1,7 @@
 ''' A small synchronous plugin applicator module. '''
 
+from lib.plugins.hipchat import HipChatPlugin
+
 class Anchor():
     '''
     Anchor is a small but powerful way to architect libraries.
@@ -12,6 +14,8 @@ class Anchor():
     def __init__(self):
         ''' Initialize our plugin pool. '''
         self._plugins = {}
+
+        self.apply(HipChatPlugin())
 
     def apply_plugins(self, event, *args, **kwargs):
         ''' Apply plugins registered for a event. '''

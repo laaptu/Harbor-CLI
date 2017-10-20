@@ -2,6 +2,8 @@
 Manage Android/ReactNative related actions through here.
 '''
 import os
+import json
+import xml.etree.ElementTree as ET
 
 from lib.shell import run
 from lib.exceptions.InvalidAndroidProject import InvalidAndroidProjectException
@@ -102,7 +104,8 @@ def apk_path():
 
 def apk_size(path):
     ''' Returns size of apk. '''
-    return os.path.getsize(path)
+    # in megabytes.
+    return os.path.getsize(path) >> 20
 
 def build_details():
     ''' Returns the build details of the apks currently in output. '''
@@ -115,3 +118,40 @@ def build_details():
         'apk_path': path,
         'is_signed': is_signed
     }
+
+def parse_manifest():
+    ''' Parses the manifest XML file and gets relevant information. '''
+    manifestpath = get_manifest_path()
+    tree = ET.parse(manifestpath)
+    root = tree.getroot()
+
+    # Only interested in the root since it has the packagename.
+    packagename = root.attrib['package']
+
+    return {
+        'packagename': packagename
+    }
+
+def parse_packagejson():
+    ''' Parse package.json and return relevant information. '''
+    with open(PACKAGE_JSON) as packagejson:
+        data = json.load(packagejson)
+
+        return {
+            'name': data['name']
+        }
+
+def project_details():
+    ''' Returns the details  of the project in cwd. '''
+    manifestdetails = parse_manifest()
+
+    # For react native, parse package.json too
+    if is_react_native():
+        packagejsondetails = parse_packagejson()
+
+    # Merge the two dictionaries.
+    # Cant destructure here since py<3.5 support is required.
+    details = manifestdetails.copy()
+    details.update(packagejsondetails)
+
+    return details

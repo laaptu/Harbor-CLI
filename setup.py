@@ -12,7 +12,9 @@ setup(
         'pyfiglet',
         'colorama',
         'pyspin',
-        'requests'
+        'requests',
+        'inquirer',
+        'terminaltables'
     ],
     entry_points={
         'console_scripts': ['harbor=lib.cli:cli']

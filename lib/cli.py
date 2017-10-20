@@ -3,9 +3,12 @@ import sys
 import click
 from pyfiglet import Figlet
 
+from lib.logger import init_logger, logger
 from lib.utils.validators import is_valid_email
 from lib.constants.release_types import ReleaseTypes
-from lib.services import deploy_service, registration_service, invitation_service
+from lib.services import registration_service, invitation_service
+
+from lib.commands.deploy import Deploy
 
 REGISTER_HELP_TEXT = 'Flag to indicate if a user is to be registered.'
 DEPLOY_HELP_TEXT = 'Release type [qa, uat, dev].\
@@ -18,9 +21,14 @@ INVALID_ROLE = 'Role {0} is not valid. Please use one of ["qa", "uat", "dev"] '
 INVALID_DEPLOY_TYPE = 'Please use "uat", "qa" or "dev" as the deploy type'
 INVALID_EMAIL = '"{0}" is not a valid email.'
 
+# Clear the screen.
 click.clear()
-print(Figlet(font='slant').renderText('HARBOR'))
 
+# Show a ASCII art on the screen.
+print(Figlet().renderText('HARBOR'))
+
+# Initalize logger.
+init_logger()
 
 @click.group()
 def cli():
@@ -39,19 +47,7 @@ def register(user):
 @click.option('--deploy-type', help=DEPLOY_HELP_TEXT)
 def deploy(deploy_type):
     ''' Deploy your project once it has been registered. '''
-    def validate_deploy_type(deploy_type, accepted_values):
-        '''  Check if deploy_type is in list of accepted_values. '''
-        if deploy_type.lower() not in accepted_values:
-            print(INVALID_DEPLOY_TYPE)
-            sys.exit(1)
-
-    if deploy_type is None:
-        deploy_type = ReleaseTypes.DEV.value
-
-    validate_deploy_type(deploy_type,
-                         [release_type.value.lower() for release_type in ReleaseTypes]
-                        )
-    deploy_service.DeployService(deploy_type).delegate()
+    Deploy(deploy_type).deploy()
 
 
 @click.command()
@@ -62,7 +58,7 @@ def invite(email, role):
     def validate_role(role, accepted_values):
         '''  Check if role is in list of accepted_values. '''
         if role.lower() not in accepted_values:
-            print(INVALID_ROLE.format(role))
+            logger().error(INVALID_ROLE.format(role))
             sys.exit(1)
 
     if role is None:
@@ -70,7 +66,7 @@ def invite(email, role):
     validate_role(role, [release_type.value.lower() for release_type in ReleaseTypes])
 
     if not is_valid_email(email):
-        print(INVALID_EMAIL.format(email))
+        logger().error(INVALID_EMAIL.format(email))
         sys.exit(1)
 
     invitation_service.InvitationService(role, email).delegate()

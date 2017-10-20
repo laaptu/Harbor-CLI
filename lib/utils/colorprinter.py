@@ -29,7 +29,6 @@ def colorprint(text_color, bail_result=False):
 
     return printer
 
-
 def print_with_spinner(color, text):
     '''
     A decorator to wrap any text preceding a function call
