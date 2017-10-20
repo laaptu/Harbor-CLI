@@ -51,6 +51,9 @@ class HipChatPlugin():
         if not config.is_hipchat_configured():
             return
 
+        if not config.is_hipchat_config_valid():
+            return
+
         release_type, branch = destructure(compilation)('release_type', 'branch')
         notification_data = {
             'color': 'red',
