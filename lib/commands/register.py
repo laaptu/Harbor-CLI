@@ -101,7 +101,7 @@ class Register(Anchor):
         }
 
         # The one registering the project is an admin by default.
-        memberpath = 'members/{uid}'
+        memberpath = 'members/{uid}/{packagename}'
         member = {
             'role': 'admin',
             'notificationLevel': 'all'
@@ -113,7 +113,10 @@ class Register(Anchor):
         )
 
         Firebase().write_to_db(
-            memberpath.format(uid=self.user['uid']),
+            memberpath.format(
+                uid=self.user['uid'],
+                packagename=self.packagename
+            ),
             member
         )
 
