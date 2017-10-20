@@ -10,7 +10,6 @@ from lib.plugins.hipchat import HipChatPlugin
 from lib.utils.destructure import destructure
 from lib.services.firebase_service import Firebase
 from lib.utils.gradle import get_react_native_project_name
-from lib.exceptions.FileNotFound import FileNotFoundException
 from lib.utils.colorprinter import colorprint, print_with_spinner
 
 EMAIL_EXISTS_ERROR_MESSAGE = 'An error occurred.\
@@ -98,40 +97,3 @@ class FirebasePlugin(Anchor):
             update=True
         )
         colorprint('GREEN')('Successfully registered.')
-
-
-    def add_user_to_project(self, **kwargs):
-        '''
-        Add an entry to members/{uid}/{packageName}.
-        '''
-        def proj_path(proj_name):
-            ''' Database path for projects. '''
-            return ''.join(proj_name.split('.'))
-
-        def members_output_path(user, proj_name):
-            ''' Database path for members. '''
-            return 'members/' + user['uid'] + '/' + proj_path(proj_name)
-
-        target_email, role = destructure(kwargs)('email', 'role')
-        try:
-            project_name = get_react_native_project_name()
-        except FileNotFoundException as error:
-            colorprint('RED')(error.message)
-            sys.exit(1)
-
-        existing = Firebase().get_from_db('projects/' + proj_path(project_name))
-        if existing.val() is None:
-            colorprint('RED')('The project does not exist.')
-            sys.exit(1)
-
-        user = Firebase().get_details_for_user_by_email(target_email)()
-        data = {
-            'role': role,
-            'notificationLevel': role
-        }
-        Firebase().write_to_db(
-            members_output_path(user, project_name),
-            data,
-            update=True
-        )
-        colorprint('GREEN')('Invited "{0}" to "{1}" as "{2}"'.format(target_email, project_name, role))

@@ -36,7 +36,7 @@ class Deploy(Anchor):
         self.deployer = git.username() or whoami()
         self.deploy_type = sanitize_deploy_type(deploy_type)
 
-    def deploy(self):
+    def execute(self):
         ''' Deploy project. '''
 
         if not android.is_android():
@@ -55,7 +55,8 @@ class Deploy(Anchor):
 
         self.changelog = getchangelog()
 
-        clean_and_build()
+        clean()
+        build()
 
         self.projectdetails = android.project_details()
         self.builddetails = android.build_details()
@@ -195,14 +196,14 @@ class Deploy(Anchor):
 
 def sanitize_deploy_type(incoming_deploy_type):
     ''' For unpermitted incoming deploy type, fallback to 'dev'.  '''
-    if incoming_deploy_type not in DEPLOY_TYPES:
+    if incoming_deploy_type.lower() not in DEPLOY_TYPES:
         logger().warning('Unspecified or unpermitted deploy type - Falling back to "dev"')
         return 'dev'
 
     return incoming_deploy_type
 
-def clean_and_build():
-    ''' Clean and build the android project. '''
+def clean():
+    ''' Clean the android project. '''
     if not android.is_android():
         logger().error('Not in a valid android project.')
         sys.exit(1)
@@ -214,6 +215,9 @@ def clean_and_build():
         sys.exit(1)
 
     logger().info('Clean succesful.')
+
+def build():
+    ''' Build the android project. '''
     logger().info('Building the project..')
     build_exitcode, _, _ = android.build()
     if build_exitcode is not 0:
