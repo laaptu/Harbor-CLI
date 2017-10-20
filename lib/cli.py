@@ -4,7 +4,6 @@ from pyfiglet import Figlet
 
 from lib import __version__
 from lib.logger import init_logger
-from lib.services import registration_service
 
 from lib.commands.deploy import Deploy
 from lib.commands.invite import Invite
