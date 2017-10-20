@@ -59,12 +59,34 @@ class Deploy(Anchor):
 
         logger().info('Deployment confirmation obtained.')
 
+        logger().info('Running pre-deploy hooks.')
+        self.predeployhooks()
+
         logger().info('Uploading APK to remote server..')
 
         self.upload()
         self.update_project()
 
+        logger().info('Running post-deploy hooks.')
+        self.postdeployhooks()
         logger().info('Upload complete. Deployment successful.')
+
+    def predeployhooks(self):
+        ''' Run pre-deploy tasks. '''
+        data = {
+            'branch': git.branch(),
+            'release_type': self.deploy_type
+        }
+        self.apply_plugins('deploy/will_upload', data)
+
+    def postdeployhooks(self):
+        ''' Run post-deploy tasks. '''
+        data = {
+            'url': self.apk_url,
+            'branch': git.branch(),
+            'release_type': self.deploy_type
+        }
+        self.apply_plugins('deploy/did_deploy', data)
 
     def upload(self):
         ''' Upload the APK to storage. '''
