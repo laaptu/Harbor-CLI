@@ -6,7 +6,7 @@ from pyfiglet import Figlet
 from lib.logger import init_logger, logger
 from lib.utils.validators import is_valid_email
 from lib.constants.release_types import ReleaseTypes
-from lib.services import deploy_service, registration_service, invitation_service
+from lib.services import registration_service, invitation_service
 
 from lib.commands.deploy import Deploy
 
