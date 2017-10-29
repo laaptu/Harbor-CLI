@@ -17,6 +17,9 @@ setup(
     entry_points={
         'console_scripts': ['harbor=lib.cli:cli']
     },
+    extras_require={
+        'develop': ['pytest', 'pylint'],
+    },
     url='',
     author='Srishan Bhattarai',
     author_email='srishanbhattarai@gmail.com',
