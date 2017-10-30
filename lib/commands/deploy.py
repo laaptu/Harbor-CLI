@@ -1,5 +1,6 @@
 ''' Service for deploy command. '''
 import sys
+import click
 from terminaltables import SingleTable
 from requests import exceptions
 
@@ -38,6 +39,7 @@ class Deploy(Anchor):
 
     def execute(self):
         ''' Deploy project. '''
+        noconfirm =  click.get_current_context().params['noconfirm']
 
         if not android.is_android():
             logger().error('You are not in a valid Android project.')
@@ -68,13 +70,14 @@ class Deploy(Anchor):
 
         self.show_summary()
 
-        is_confirmed = getdeploymentconfirmation()
+        if not noconfirm:
+            is_confirmed = getdeploymentconfirmation()
 
-        if not is_confirmed:
-            logger().warning('Deployment aborted.')
-            sys.exit(1)
+            if not is_confirmed:
+                logger().warning('Deployment aborted.')
+                sys.exit(1)
 
-        logger().info('Deployment confirmation obtained.')
+            logger().info('Deployment confirmation obtained.')
 
         logger().info('Running pre-deploy hooks.')
         self.predeployhooks()

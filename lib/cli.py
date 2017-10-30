@@ -19,6 +19,7 @@ INVITATION_HELP_TEXT = 'Role to register the user under [qa, uat, dev].\
 INVALID_ROLE = 'Role {0} is not valid. Please use one of ["qa", "uat", "dev"] '
 INVALID_DEPLOY_TYPE = 'Please use "uat", "qa" or "dev" as the deploy type'
 INVALID_EMAIL = '"{0}" is not a valid email.'
+NOCONFIRM_HELP = 'Don\'t ask for confirmation'
 
 # Clear the screen.
 click.clear()
@@ -45,7 +46,8 @@ def register(user):
 
 @click.command()
 @click.option('--deploy-type', help=DEPLOY_HELP_TEXT)
-def deploy(deploy_type):
+@click.option('--noconfirm', help=NOCONFIRM_HELP)
+def deploy(deploy_type, noconfirm):
     ''' Deploy your project once it has been registered. '''
     Deploy(deploy_type).execute()
 
