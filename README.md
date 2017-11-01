@@ -7,6 +7,8 @@ With an intuitive CLI for developers, and a simple but _effective_ mobile app fo
 
 _(Note: This repo houses only the CLI for Harbor. The mobile app lives in a [different repo](https://github.com/srishanbhattarai/Harbor).)_
 
+_(Please take a look at the [board](https://waffle.io/srishanbhattarai/Harbor-CLI) for issues and contributing.)
+
 ## Requirements
 * A linux or macOS/OSX system (Windows compatibility has never been checked and never will be)
 * Python 3.3 - 3.6

@@ -97,7 +97,7 @@ class Register(Anchor):
             'metadata': {},
             'iconUrl': self.icon_url,
             'packageName': self.packagename,
-            'name': self.projectdetails['name'] or self.packagename
+            'name': self.projectdetails['name']
         }
 
         # The one registering the project is an admin by default.

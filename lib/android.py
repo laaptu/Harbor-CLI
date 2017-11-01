@@ -62,7 +62,7 @@ def build():
     if is_react_native():
         return run('./android/gradlew -p android assembleRelease')
     elif is_native_android():
-        return run('./android/gradlew assembleRelease')
+        return run('./gradlew assembleRelease')
     else:
         raise InvalidAndroidProjectException()
 
@@ -71,7 +71,7 @@ def clean():
     if is_react_native():
         return run('./android/gradlew -p android clean')
     elif is_native_android():
-        return run('./android/gradlew clean')
+        return run('./gradlew clean')
     else:
         raise InvalidAndroidProjectException()
 
@@ -152,7 +152,13 @@ def project_details():
     # Merge the two dictionaries.
     # Cant destructure here since py<3.5 support is required.
     details = manifestdetails.copy()
-    details.update(packagejsondetails)
+
+    if is_react_native():
+        details.update(packagejsondetails)
+    else:
+        details.update({
+            'name': manifestdetails['packagename']
+        })
 
     return details
 
