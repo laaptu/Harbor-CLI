@@ -8,18 +8,20 @@ import xml.etree.ElementTree as ET
 from lib.shell import run
 from lib.exceptions.InvalidAndroidProject import InvalidAndroidProjectException
 
+PWD = os.getcwd()
+
 BASE_MANIFEST = '/app/src/main/AndroidManifest.xml'
 BASE_APK_PATH = '/app/build/outputs/apk/'
 
-NATIVE_ANDROID_MANIFEST = ''.join([os.getcwd(), BASE_MANIFEST])
-REACT_NATIVE_MANIFEST = ''.join([os.getcwd(), '/android', BASE_MANIFEST])
+NATIVE_ANDROID_MANIFEST = ''.join([PWD, BASE_MANIFEST])
+REACT_NATIVE_MANIFEST = ''.join([PWD, '/android', BASE_MANIFEST])
 
-SIGNED_ANDROID_PATH = ''.join([os.getcwd(), BASE_APK_PATH, 'app-release.apk'])
-UNSIGNED_ANDROID_PATH = ''.join([os.getcwd(), BASE_APK_PATH, 'app-release-unsigned.apk'])
+SIGNED_ANDROID_PATH = ''.join([PWD, BASE_APK_PATH, 'app-release.apk'])
+UNSIGNED_ANDROID_PATH = ''.join([PWD, BASE_APK_PATH, 'app-release-unsigned.apk'])
 
-SIGNED_REACT_NATIVE_PATH = ''.join([os.getcwd(), '/android', BASE_APK_PATH, 'app-release.apk'])
+SIGNED_REACT_NATIVE_PATH = ''.join([PWD, '/android', BASE_APK_PATH, 'app-release.apk'])
 UNSIGNED_REACT_NATIVE_PATH = ''.join([
-    os.getcwd(), '/android', BASE_APK_PATH, 'app-release-unsigned.apk'
+    PWD, '/android', BASE_APK_PATH, 'app-release-unsigned.apk'
 ])
 
 PACKAGE_JSON = 'package.json'
@@ -165,7 +167,7 @@ def project_details():
 def launcher_icon():
     ''' Finds appropriate launcher icon for the project. '''
 
-    return find('ic_launcher.png', os.getcwd())
+    return find('ic_launcher.png', PWD)
 
 def find(name, path):
     ''' A helper to find a filename in a path. '''
