@@ -8,6 +8,7 @@ from copy import copy
 
 LOGGER_KEY = 'HARBOR'
 
+
 def init_logger():
     ''' Setup logger '''
 
@@ -62,9 +63,11 @@ def init_logger():
                 return func(*new_args)
             return new
         # all non-Windows platforms support ANSI Colors so we use them
-        logging.StreamHandler.emit = add_color_emit_ansi(logging.StreamHandler.emit)
+        logging.StreamHandler.emit = add_color_emit_ansi(
+            logging.StreamHandler.emit)
 
     return instance
+
 
 def logger():
     ''' Get a logger instance. '''

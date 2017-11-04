@@ -14,6 +14,7 @@ RELEASE_LOG_TEXT = '''
 # On branch '{0}' as user '{1}'
 '''
 
+
 def getlogincredentials():
     ''' Inquire about login credentials from the user. '''
     questions = [
@@ -34,6 +35,7 @@ def getlogincredentials():
 
     return (answers['email'], answers['password'])
 
+
 def getversionnumber():
     ''' Get version number for a release. '''
     questions = [
@@ -46,6 +48,7 @@ def getversionnumber():
     answers = prompt(questions)
 
     return answers['version']
+
 
 def getchangelog():
     '''
@@ -63,8 +66,9 @@ def getchangelog():
         serialized = data.split(RELEASE_LOG_TEXT.format(branch, user))
 
         return serialized[0]
-    except Exception: #pylint: disable=broad-except
+    except Exception:  # pylint: disable=broad-except
         return ''
+
 
 def getdeploymentconfirmation():
     ''' Get confirmation (y/N) for deployment. '''

@@ -30,6 +30,7 @@ print(Figlet().renderText('HARBOR'))
 # Initalize logger.
 init_logger()
 
+
 @click.version_option(__version__, message='%(version)s')
 @click.group()
 def cli():

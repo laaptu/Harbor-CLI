@@ -3,6 +3,7 @@ Helpers to the UNIX shell.
 '''
 from subprocess import Popen, PIPE
 
+
 def run(command):
     '''
     Run an arbitrary shell command.

@@ -12,6 +12,7 @@ from lib.android import (
     NATIVE_ANDROID_MANIFEST,
 )
 
+
 def test_isnativeproject_v0():
     ''' Returns True for native android projects. '''
     path = os.getcwd() + '/app/src/main'
@@ -23,6 +24,7 @@ def test_isnativeproject_v0():
 
     os.remove(path + '/AndroidManifest.xml')
     os.rmdir(path)
+
 
 def test_isnativeproject_v1():
     ''' Test dir is not a native project - it should return false.'''
@@ -41,6 +43,7 @@ def test_manifestpath_v0():
     os.remove(path + '/AndroidManifest.xml')
     os.rmdir(path)
 
+
 def test_manifestpath_v1():
     ''' Should return correct path for native android project. '''
     path = os.getcwd() + '/android/app/src/main'
@@ -53,11 +56,13 @@ def test_manifestpath_v1():
     os.remove(path + '/AndroidManifest.xml')
     os.rmdir(path)
 
+
 def test_manifestpath_v2():
     ''' Should throw exception when not an android/RN project. '''
     with pytest.raises(Exception):
         assert get_manifest_path() == NATIVE_ANDROID_MANIFEST
         assert get_manifest_path() == REACT_NATIVE_MANIFEST
+
 
 def test_isreactnative_v0():
     ''' Returns True for react native android projects. '''
@@ -72,6 +77,7 @@ def test_isreactnative_v0():
     os.remove(path + '/AndroidManifest.xml')
     os.rmdir(path)
 
+
 def test_is_android_v0():
     ''' Returns True for react native android projects. '''
     path = os.getcwd() + '/android/app/src/main'
@@ -84,6 +90,7 @@ def test_is_android_v0():
     os.remove(path + '/AndroidManifest.xml')
     os.rmdir(path)
 
+
 def test_is_android_v1():
     ''' Returns True for react native android projects. '''
     path = os.getcwd() + '/app/src/main'
@@ -95,6 +102,7 @@ def test_is_android_v1():
 
     os.remove(path + '/AndroidManifest.xml')
     os.rmdir(path)
+
 
 def test_is_android_v2():
     ''' Returns True for react native android projects. '''

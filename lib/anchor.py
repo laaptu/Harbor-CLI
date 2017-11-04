@@ -2,6 +2,7 @@
 
 from lib.plugins.hipchat import HipChatPlugin
 
+
 class Anchor():
     '''
     Anchor is a small but powerful way to architect libraries.
@@ -11,6 +12,7 @@ class Anchor():
     Plugins would generally receive a single arg - "compilation"
     Very similar to webpack's tapable. (https://github.com/webpack/tapable)
     '''
+
     def __init__(self):
         ''' Initialize our plugin pool. '''
         self._plugins = {}

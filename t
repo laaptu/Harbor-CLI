@@ -28,5 +28,12 @@ publish() {
   python setup.py sdist upload -r pypi
 }
 
+pep8() {
+  echo "Running autopep8"
+  autopep8 --in-place --aggressive lib/*.py
+  autopep8 --in-place --aggressive tests/*.py
+  echo "Done."
+}
+
 # Run command received from args.
 $1
