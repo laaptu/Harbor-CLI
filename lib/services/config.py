@@ -33,9 +33,10 @@ def is_hipchat_configured():
     '''
     if not exists():
         return False
-    options = get()
-    if 'hipchat' not in options:
+
+    if not is_hipchat_config_valid():
         return False
+
     return True
 
 def is_hipchat_config_valid():
@@ -43,7 +44,7 @@ def is_hipchat_config_valid():
     keys = ['company_name', 'room_id', 'auth_token']
     error = 'HipChat configuration found, but keys {keys} are missing.'
 
-    if not is_hipchat_configured():
+    if 'hipchat' not in get():
         return False
 
     config = get()
