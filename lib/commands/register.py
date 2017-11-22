@@ -26,14 +26,15 @@ class Register(Anchor):
 
     def execute(self):
         ''' Register a user or a project. '''
+        if self.is_user_registration:
+            self.register_user()
+            return
+
         if not android.is_android():
             logger().error('You are not in a valid Android project.')
             sys.exit(1)
 
-        if self.is_user_registration:
-            self.register_user()
-        else:
-            self.register_project()
+        self.register_project()
 
     def register_user(self):
         ''' Register a user. '''
@@ -46,8 +47,8 @@ class Register(Anchor):
 
         try:
             Firebase().signup_via_email(email, password)
-        except Exception: #pylint: disable=broad-except
-            logger().error('Cannot register this email. Please try another one.')
+        except Exception as e: #pylint: disable=broad-except
+            logger().error('Could not register. Please use a valid email address and a strong password.')
             sys.exit(1)
 
         success = 'Signed up successfully with email "%s"' % email
