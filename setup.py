@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='harbor-cli',
-    version='1.0.0',
+    version='1.0.1',
     description='Harbor-CLI is a tool to share Android builds of React Native projects',
     packages=find_packages(exclude=['docs', 'tests*']),
     install_requires=[
