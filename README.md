@@ -1,4 +1,4 @@
-# Harbor &middot; [![Build Status](https://travis-ci.org/srishanbhattarai/Harbor-CLI.svg?branch=dev)](https://travis-ci.org/srishanbhattarai/Harbor-CLI) [![Waffle.io - Columns and their card count](https://badge.waffle.io/srishanbhattarai/Harbor-CLI.svg?columns=all)](http://waffle.io/srishanbhattarai/Harbor-CLI)
+# Harbor &middot; [![Build Status](https://travis-ci.org/srishanbhattarai/Harbor-CLI.svg?branch=dev)](https://travis-ci.org/srishanbhattarai/Harbor-CLI) [![PyPI version](https://badge.fury.io/py/harbor-cli.svg)](https://badge.fury.io/py/harbor-cli)
 
 
 Harbor-CLI is a tool to share Android builds of React Native projects. 
