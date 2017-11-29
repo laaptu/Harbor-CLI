@@ -49,6 +49,18 @@ def getversionnumber():
 
     return answers['version']
 
+def getbuildtype():
+    ''' Select build type. '''
+    questions = [
+        Text(
+            'build',
+            message='Choose build type ( release/debug )'
+        )
+    ]
+
+    answers = prompt(questions)
+
+    return answers['build']
 
 def getchangelog():
     '''

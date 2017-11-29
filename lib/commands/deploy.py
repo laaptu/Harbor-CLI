@@ -13,6 +13,7 @@ from lib.services.firebase_service import Firebase
 from lib.inqurires import (
     getchangelog,
     getversionnumber,
+    getbuildtype,
     getlogincredentials,
     getdeploymentconfirmation
 )
@@ -30,6 +31,7 @@ class Deploy(Anchor):
 
         self.now = now()
         self.version = None
+        self.buildtype = None
         self.apk_url = None
         self.changelog = None
         self.builddetails = None
@@ -60,11 +62,11 @@ class Deploy(Anchor):
             sys.exit(1)
 
         self.version = getversionnumber()
-
+        self.buildtype = getbuildtype()
         self.changelog = getchangelog()
 
         clean()
-        build()
+        build(self.buildtype)
 
         self.builddetails = android.build_details()
 
@@ -236,10 +238,10 @@ def clean():
 
     logger().info('Clean succesful.')
 
-def build():
+def build(buildtype):
     ''' Build the android project. '''
     logger().info('Building the project..')
-    build_exitcode, _, err = android.build()
+    build_exitcode, _, err = android.build(buildtype)
     if build_exitcode is not 0:
         logger().error(err)
         logger().error('Build failed. Please check that your project is valid.')

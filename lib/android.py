@@ -2,6 +2,7 @@
 Manage Android/ReactNative related actions through here.
 '''
 import os
+import fnmatch
 import json
 import xml.etree.ElementTree as ET
 
@@ -66,12 +67,15 @@ def is_react_native():
     return False
 
 
-def build():
+def build(buildtype):
     ''' Builds the android project. '''
+    buildscript = './gradlew assembleDebug'
+    if buildtype == "release":
+        buildscript = './gradlew assembleRelease' 
     if is_react_native():
         return run('./android/gradlew -p android assembleRelease')
     elif is_native_android():
-        return run('./gradlew assembleRelease')
+        return run(buildscript)
     else:
         raise InvalidAndroidProjectException()
 
@@ -94,16 +98,31 @@ def signed(path):
     if path == SIGNED_REACT_NATIVE_PATH or path == SIGNED_ANDROID_PATH:
         return True
 
-    raise InvalidAndroidProjectException()
+    #raise InvalidAndroidProjectException()
+    return False
 
+def find_apk():
+    basepath = ''.join([PWD, BASE_APK_PATH])
+    print(basepath)
+    for filename in find_files(basepath, '*.apk'):
+        return filename
+
+def find_files(directory, pattern):
+    for root, dirs, files in os.walk(directory):
+        for basename in files:
+            if fnmatch.fnmatch(basename, pattern):
+                filename = os.path.join(root, basename)
+                yield filename
 
 def apk_path():
     ''' Returns path to apk. '''
+    apkpath = find_apk()
     paths = [
         UNSIGNED_REACT_NATIVE_PATH,
         UNSIGNED_ANDROID_PATH,
         SIGNED_ANDROID_PATH,
-        SIGNED_REACT_NATIVE_PATH
+        SIGNED_REACT_NATIVE_PATH,
+        apkpath
     ]
 
     def addexistence(path): return {
